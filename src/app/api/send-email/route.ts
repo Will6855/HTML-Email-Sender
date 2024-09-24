@@ -2,12 +2,21 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
 export async function POST(request: Request) {
-  const { smtpServer, port, email, password, to, subject, htmlContent } = await request.json();
+  const formData = await request.formData();
+  const smtpServer = formData.get('smtpServer') as string;
+  const port = formData.get('port') as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  const to = formData.get('to') as string;
+  const subject = formData.get('subject') as string;
+  const htmlContent = formData.get('htmlContent') as string;
+  const senderName = formData.get('senderName') as string;
+  const attachments = formData.getAll('attachments') as File[];
 
   let transporter = nodemailer.createTransport({
     host: smtpServer,
     port: parseInt(port, 10),
-    secure: parseInt(port, 10) === 465, // true for port 465, false for other ports
+    secure: parseInt(port, 10) === 465,
     auth: {
       user: email,
       pass: password,
@@ -17,15 +26,18 @@ export async function POST(request: Request) {
   try {
     await transporter.verify();
     await transporter.sendMail({
-      from: email,
+      from: `${senderName} <${email}>`,
       to: to,
       subject: subject,
       html: htmlContent,
+      attachments: await Promise.all(attachments.map(async (file) => ({
+        filename: file.name,
+        content: Buffer.from(await file.arrayBuffer()),
+      }))),
     });
-
     return NextResponse.json({ message: 'Email sent successfully' }, { status: 200 });
   } catch (error) {
     console.error('Failed to send email:', error);
-    return NextResponse.json({ error: error || 'Failed to send email' }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message || 'Failed to send email' }, { status: 500 });
   }
 }

@@ -13,9 +13,11 @@ interface SmtpSettings {
 }
 
 interface FormData extends SmtpSettings {
+  senderName: string;
   to: string;
   subject: string;
   htmlContent: string;
+  attachments: File[];
 }
 
 const Home = () => {
@@ -24,9 +26,11 @@ const Home = () => {
     port: '',
     email: '',
     password: '',
+    senderName: '',
     to: '',
     subject: '',
     htmlContent: '',
+    attachments: [],
   });
 
   const [csvData, setCsvData] = useState<Record<string, string>[]>([]);
@@ -49,6 +53,22 @@ const Home = () => {
     if (name === 'htmlContent') {
       updateEmailPreview(value);
     }
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setForm((prev) => ({ 
+        ...prev, 
+        attachments: [...prev.attachments, ...Array.from(e.target.files!)]
+      }));
+    }
+  };
+
+  const handleRemoveAttachment = (index: number) => {
+    setForm((prev) => ({
+      ...prev,
+      attachments: prev.attachments.filter((_, i) => i !== index),
+    }));
   };
 
   const handleCsvDataLoaded = (data: Record<string, string>[]) => {
@@ -79,13 +99,23 @@ const Home = () => {
         htmlContent = htmlContent.replace(new RegExp(`{{${key}}}`, 'g'), row[key]);
       });
 
+      const formData = new FormData();
+      formData.append('smtpServer', form.smtpServer);
+      formData.append('port', form.port);
+      formData.append('email', form.email);
+      formData.append('password', form.password);
+      formData.append('senderName', form.senderName);
+      formData.append('to', email);
+      formData.append('subject', form.subject);
+      formData.append('htmlContent', htmlContent);
+      form.attachments.forEach((file) => {
+        formData.append('attachments', file);
+      });
+
       try {
         const response = await fetch('/api/send-email', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ...form, to: email, htmlContent }),
+          body: formData,
         });
 
         if (!response.ok) {
@@ -149,6 +179,18 @@ const Home = () => {
         <h2 className="text-2xl font-semibold mb-4">Email Content</h2>
         <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <div>
+            <label htmlFor="senderName" className="block text-sm font-medium text-gray-700">Sender Name</label>
+            <input 
+              type="text" 
+              id="senderName" 
+              name="senderName" 
+              value={form.senderName}  // Added senderName input
+              onChange={handleChange} 
+              required 
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+          </div>
+          <div>
             <label htmlFor="subject" className="block text-sm font-medium text-gray-700">Subject</label>
             <input 
               type="text" 
@@ -173,6 +215,37 @@ const Home = () => {
               placeholder="Use {{column_name}} to insert dynamic data"
             />
           </div>
+          <div>
+            <label htmlFor="attachments" className="block text-sm font-medium text-gray-700">Attachments</label>
+            <input 
+              type="file" 
+              id="attachments" 
+              onChange={handleFileChange} 
+              multiple 
+              className="mt-1 block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-indigo-50 file:text-indigo-700
+                hover:file:bg-indigo-100"
+            />
+            {form.attachments.length > 0 && (
+              <ul className="mt-2 space-y-2">
+                {form.attachments.map((file, index) => (
+                  <li key={index} className="flex items-center justify-between">
+                    <span>{file.name}</span>
+                    <button 
+                      onClick={() => handleRemoveAttachment(index)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           <button 
             type="button" 
             onClick={handleSendEmails}

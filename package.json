@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "formidable": "^3.5.1",
     "next": "14.2.7",
     "nodemailer": "^6.9.14",
     "papaparse": "^5.4.1",
@@ -16,6 +17,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/formidable": "^3.4.5",
     "@types/node": "^20",
     "@types/nodemailer": "^6.4.15",
     "@types/papaparse": "^5.3.14",
