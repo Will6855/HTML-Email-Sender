@@ -18,9 +18,12 @@ const CSVUploader = ({ onDataLoaded }: CSVUploaderProps) => {
         header: true,
         skipEmptyLines: true,
         complete: (result) => {
-          setData(result.data as Record<string, string>[]);
-          setColumns(Object.keys(result.data[0]));
-          onDataLoaded(result.data as Record<string, string>[]);
+          const parsedData = result.data as Record<string, string>[];
+          setData(parsedData);
+          if (parsedData.length > 0) {
+            setColumns(Object.keys(parsedData[0]));
+          }
+          onDataLoaded(parsedData);
         },
       });
     }

@@ -10,7 +10,7 @@ const Header = () => {
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Send Email', href: '/send-mail' },
+    { name: 'New Email', href: '/send-mail' },
   ];
 
   return (

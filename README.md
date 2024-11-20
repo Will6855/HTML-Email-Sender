@@ -1,111 +1,120 @@
-# HTML Email Sender
+# HTML Email Sender 📧
+
+<div align="center">
 
 A modern, feature-rich Next.js application for composing and sending HTML emails with an intuitive user interface and powerful mailing list management. All configurations are stored securely in your browser, with no server setup required.
 
-## Features
+[![Next.js](https://img.shields.io/badge/Next.js-14.0-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-- **HTML Email Composition**
-  - Rich text editor for creating beautiful HTML emails
+[Documentation](#documentation) | [Features](#features) | [Installation](#installation) | [Contributing](#contributing)
+
+![Application Screenshot](public/screenshot.png)
+
+</div>
+
+## ✨ Features
+
+### 📝 HTML Email Composition
+- **Rich Text Editor**
+  - Intuitive WYSIWYG interface
   - Real-time preview of email content
   - Support for custom HTML templates
+  - Responsive email templates
 
-- **Mailing List Management**
+### 👥 Mailing List Management
+- **Comprehensive Contact Management**
   - Create and edit recipient lists
-  - Import/export functionality
-  - Group management
-  - Contact categorization
+  - Import/export functionality (CSV)
 
-- **SMTP Configuration**
-  - Save SMTP settings directly in your browser
-  - Secure local storage of credentials
-  - Support for popular email services
-  - No server configuration needed
+### ⚙️ SMTP Configuration
+- **Secure Settings Management**
+  - Save SMTP settings locally in your browser
+  - Support for popular email services:
+    - Gmail
+    - Outlook
+    - Amazon SES
+    - Custom SMTP servers
 
-- **Email Preview & Testing**
-  - Preview emails across different devices
-  - Send test emails before bulk sending
-  - Validate email content and formatting
+## 🚀 Getting Started
 
-## Tech Stack
-
-- **Frontend Framework**: Next.js 14
-- **Styling**: Tailwind CSS
-- **Email Service**: Nodemailer
-- **Type Safety**: TypeScript
-- **State Management**: React Context API
-- **Storage**: Browser Local Storage
-
-## Prerequisites
-
-Before running the application, ensure you have:
-
-- Node.js 18.x or higher
+### Prerequisites
+- Node.js 18.x or later
 - npm or yarn package manager
-- SMTP server details from your email provider
 
-## Getting Started
+### Installation
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/Will6855/html-email-sender.git
-   cd html-email-sender
-   ```
+1. Clone the repository:
+```bash
+git clone https://github.com/Will6855/html-email-sender.git
+cd html-email-sender
+```
 
-2. **Install Dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
 
-3. **Run Development Server**
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
+3. Run the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-4. **Build for Production**
-   ```bash
-   npm run build
-   npm start
-   # or
-   yarn build
-   yarn start
-   ```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## SMTP Configuration
+## 📖 Documentation
 
-The application stores all SMTP configurations securely in your browser's local storage. To set up your email service:
+### Configuration
+Configure your SMTP settings in the application:
 
-1. Click on the Settings/Configuration section in the app
-2. Enter your SMTP server details:
-   - SMTP Host (e.g., smtp.gmail.com)
-   - Port (e.g., 587 for TLS)
-   - Username (your email address)
-   - Password (your email password or app-specific password)
-3. Save the configuration (it will be stored in your browser)
+1. Navigate to Settings
+2. Enter your SMTP credentials:
+   - SMTP Host
+   - Port
+   - Username
+   - Password
 
-Note: For services like Gmail, you may need to use an App Password instead of your regular password. Check your email provider's documentation for specific SMTP settings.
+### Creating Your First Email
 
-## Mailing Lists
+1. Click "New Email" button
+2. Compose your email using the rich text editor
+3. Add recipients from your contact list
+4. Preview and send!
 
-1. Go to the Mailing Lists section
-2. Create a new list or import existing contacts
-3. Organize contacts into groups
+## 🔒 Security
 
-## Contributing
+- All sensitive data is stored locally in your browser
+- No data is sent to external servers
+- SMTP connections are secure and encrypted
+
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## 💁 Support
 
 If you encounter any issues or have questions, please:
 1. Check the [Issues](https://github.com/Will6855/html-email-sender/issues) page
 2. Create a new issue if your problem isn't already listed
 3. Provide as much detail as possible about your setup and the issue
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) - The React Framework
+- [Nodemailer](https://nodemailer.com/) - Email sending functionality
+- [Tailwind CSS](https://tailwindcss.com/) - Styling framework
+
+---
+
+<div align="center">
+Made with ❤️ by Will6855
+</div>
