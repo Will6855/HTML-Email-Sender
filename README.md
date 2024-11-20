@@ -1,12 +1,14 @@
-# HTML Email Sender 📧
-
 <div align="center">
+
+# HTML Email Sender 📧
 
 A modern, feature-rich Next.js application for composing and sending HTML emails with an intuitive user interface and powerful mailing list management. All configurations are stored securely in your browser, with no server setup required.
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.0-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+> ⚠️ **Security Note**: This application is designed for local use or deployment in controlled environments. Public deployment is not recommended due to the sensitive nature of email sending capabilities.
 
 [Documentation](#documentation) | [Features](#features) | [Installation](#installation) | [Contributing](#contributing)
 
