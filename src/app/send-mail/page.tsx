@@ -1,18 +1,21 @@
 'use client';
 
 import { useState, ChangeEvent, useEffect } from 'react';
-import SmtpSettingsForm from '../components/SmtpSettingsForm';
-import CSVUploader from '../components/CSVUploader';
+import AccountManagement from '../components/AccountManagement';
 import CSVTableEditor from '../components/CSVTableEditor';
+import TemplateModal from '../components/TemplateModal';
+import FileDropZone from '../components/FileDropZone';
 
-interface SmtpSettings {
-  smtpServer: string;
-  port: string;
+interface Account {
   email: string;
   password: string;
+  name: string;
+  smtpServer: string;
+  smtpPort: number;
 }
 
-interface FormData extends SmtpSettings {
+interface FormData {
+  selectedAccount: Account | null;
   senderName: string;
   to: string;
   subject: string;
@@ -22,10 +25,7 @@ interface FormData extends SmtpSettings {
 
 const Home = () => {
   const [form, setForm] = useState<FormData>({
-    smtpServer: '',
-    port: '',
-    email: '',
-    password: '',
+    selectedAccount: null,
     senderName: '',
     to: '',
     subject: '',
@@ -33,18 +33,29 @@ const Home = () => {
     attachments: [],
   });
 
-  const [csvData, setCsvData] = useState<Record<string, string>[]>([]);
-  const [headers, setHeaders] = useState<string[]>([]);
-  const [emailColumn, setEmailColumn] = useState<string>('');
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+  const [csvData, setCsvData] = useState<Record<string, string>[]>([{ email: '' }]);
+  const [headers, setHeaders] = useState<string[]>(['email']);
+  const [emailColumn, setEmailColumn] = useState<string>('email');
   const [previewHtml, setPreviewHtml] = useState<string>('');
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
 
   useEffect(() => {
-    const savedSettings = localStorage.getItem('smtpSettings');
-    if (savedSettings) {
-      const smtpSettings: SmtpSettings = JSON.parse(savedSettings);
-      setForm((prev) => ({ ...prev, ...smtpSettings }));
+    const savedAccounts = localStorage.getItem('emailAccounts');
+    if (savedAccounts) {
+      const parsedAccounts = JSON.parse(savedAccounts);
+      setAccounts(parsedAccounts);
+      if (parsedAccounts.length > 0 && !selectedAccount) {
+        handleSelectAccount(parsedAccounts[0]);
+      }
     }
   }, []);
+
+  const handleSelectAccount = (account: Account) => {
+    setSelectedAccount(account);
+    setForm((prev) => ({ ...prev, selectedAccount: account }));
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -55,11 +66,25 @@ const Home = () => {
     }
   };
 
+  const handleFilesDrop = (files: File[]) => {
+    setForm((prev) => ({
+      ...prev,
+      attachments: [...(prev.attachments || []), ...files],
+    }));
+  };
+
+  const handleFileRemove = (index: number) => {
+    setForm((prev) => ({
+      ...prev,
+      attachments: prev.attachments?.filter((_, i) => i !== index) || [],
+    }));
+  };
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setForm((prev) => ({ 
-        ...prev, 
-        attachments: [...prev.attachments, ...Array.from(e.target.files!)]
+      setForm((prev) => ({
+        ...prev,
+        attachments: [...prev.attachments, ...Array.from(e.target.files!)],
       }));
     }
   };
@@ -90,6 +115,11 @@ const Home = () => {
       return;
     }
 
+    if (!form.selectedAccount) {
+      alert('Please select an account.');
+      return;
+    }
+
     for (const row of csvData) {
       const email = row[emailColumn];
       if (!email) continue;
@@ -100,10 +130,10 @@ const Home = () => {
       });
 
       const formData = new FormData();
-      formData.append('smtpServer', form.smtpServer);
-      formData.append('port', form.port);
-      formData.append('email', form.email);
-      formData.append('password', form.password);
+      formData.append('email', form.selectedAccount.email);
+      formData.append('password', form.selectedAccount.password);
+      formData.append('smtpServer', form.selectedAccount.smtpServer);
+      formData.append('smtpPort', form.selectedAccount.smtpPort.toString());
       formData.append('senderName', form.senderName);
       formData.append('to', email);
       formData.append('subject', form.subject);
@@ -143,6 +173,33 @@ const Home = () => {
     setPreviewHtml(previewHtml);
   };
 
+  const handleSaveTemplate = (templateName: string) => {
+    const template = {
+      subject: form.subject,
+      htmlContent: form.htmlContent,
+      senderName: form.senderName,
+    };
+    const templates = JSON.parse(localStorage.getItem('emailTemplates') || '{}');
+    templates[templateName] = template;
+    localStorage.setItem('emailTemplates', JSON.stringify(templates));
+  };
+
+  const handleLoadTemplate = (template: { subject: string; htmlContent: string; senderName: string }) => {
+    setForm((prev) => ({
+      ...prev,
+      subject: template.subject,
+      htmlContent: template.htmlContent,
+      senderName: template.senderName,
+    }));
+    updateEmailPreview(template.htmlContent);
+  };
+
+  const handleDeleteTemplate = (templateName: string) => {
+    const templates = JSON.parse(localStorage.getItem('emailTemplates') || '{}');
+    delete templates[templateName];
+    localStorage.setItem('emailTemplates', JSON.stringify(templates));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -152,66 +209,58 @@ const Home = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* SMTP Settings Section */}
+          {/* Account Management Section */}
           <div className="bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              <span className="mr-2">⚙️</span>
-              SMTP Settings
-            </h2>
-            <SmtpSettingsForm />
+            <AccountManagement 
+              selectedAccount={selectedAccount}
+              onSelectAccount={handleSelectAccount}
+              accounts={accounts}
+            />
           </div>
 
           {/* CSV Management Section */}
           <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              <span className="mr-2">📊</span>
-              Contact List Management
-            </h2>
-            <div className="space-y-6">
-              <CSVUploader onDataLoaded={handleCsvDataLoaded} />
-              
-              {headers.length > 0 && (
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Select Email Column
-                  </label>
-                  <select 
-                    value={emailColumn} 
-                    onChange={handleEmailColumnChange}
-                    className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-                  >
-                    <option value="">Select column...</option>
-                    {headers.map((header) => (
-                      <option key={header} value={header}>{header}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              <CSVTableEditor data={csvData} onDataChange={handleCsvDataLoaded} />
+            <div className="flex justify-between items-center mb-4">
             </div>
+
+            <CSVTableEditor 
+              data={csvData} 
+              onDataChange={handleCsvDataLoaded}
+              emailColumn={emailColumn}
+              onEmailColumnChange={(value) => setEmailColumn(value)}
+            />
           </div>
         </div>
 
         {/* Email Content Section */}
         <div className="mt-8 bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            <span className="mr-2">✉️</span>
-            Email Content
-          </h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-900">
+              <span className="mr-2">✉️</span>
+              Email Content
+            </h2>
+            <div className="space-x-2">
+              <button
+                onClick={() => setIsTemplateModalOpen(true)}
+                className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Manage Templates
+              </button>
+            </div>
+          </div>
           <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
                 <label htmlFor="senderName" className="block text-sm font-medium text-gray-700">
                   Sender Name
                 </label>
-                <input 
-                  type="text" 
-                  id="senderName" 
-                  name="senderName" 
+                <input
+                  type="text"
+                  id="senderName"
+                  name="senderName"
                   value={form.senderName}
-                  onChange={handleChange} 
-                  required 
+                  onChange={handleChange}
+                  required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder="John Doe"
                 />
@@ -220,13 +269,13 @@ const Home = () => {
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
                   Subject Line
                 </label>
-                <input 
-                  type="text" 
-                  id="subject" 
-                  name="subject" 
-                  value={form.subject} 
-                  onChange={handleChange} 
-                  required 
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  value={form.subject}
+                  onChange={handleChange}
+                  required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder="Your email subject"
                 />
@@ -258,41 +307,20 @@ const Home = () => {
                 Attachments
               </label>
               <div className="mt-1 flex items-center space-x-4">
-                <label className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  <span>Add Files</span>
-                  <input
-                    type="file"
-                    multiple
-                    onChange={handleFileChange}
-                    className="sr-only"
-                  />
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {form.attachments.map((file, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100"
-                    >
-                      {file.name}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveAttachment(index)}
-                        className="ml-2 text-gray-400 hover:text-gray-600"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
+                <FileDropZone
+                  onFilesDrop={handleFilesDrop}
+                  files={form.attachments}
+                  onFileRemove={handleFileRemove}
+                />
               </div>
             </div>
 
             {previewHtml && (
               <div className="mt-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Preview</h3>
-                <div 
+                <div
                   className="p-4 border rounded-md bg-white"
-                  dangerouslySetInnerHTML={{ __html: previewHtml }} 
+                  dangerouslySetInnerHTML={{ __html: previewHtml }}
                 />
               </div>
             )}
@@ -308,6 +336,20 @@ const Home = () => {
             </div>
           </form>
         </div>
+
+        {/* Template Modal */}
+        <TemplateModal
+          isOpen={isTemplateModalOpen}
+          onClose={() => setIsTemplateModalOpen(false)}
+          onSelect={handleLoadTemplate}
+          onDelete={handleDeleteTemplate}
+          onSave={handleSaveTemplate}
+          currentTemplate={{
+            subject: form.subject,
+            htmlContent: form.htmlContent,
+            senderName: form.senderName,
+          }}
+        />
       </div>
     </div>
   );
