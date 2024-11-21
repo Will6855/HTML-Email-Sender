@@ -28,7 +28,7 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
 ### 👥 Mailing List Management
 - **Comprehensive Contact Management**
   - Create and edit recipient lists
-  - Import/export functionality (CSV)
+  - Import functionality (CSV)
 
 ### ⚙️ SMTP Configuration
 - **Secure Settings Management**
