@@ -12,17 +12,19 @@ interface Account {
 }
 
 interface AccountManagementProps {
-  selectedAccount?: Account | null;
-  onSelectAccount: (account: Account) => void;
+  selectedAccount: Account | null;
+  onSelectAccount: (account: Account | null) => void;
   accounts: Account[];
+  onAccountsChange: (accounts: Account[]) => void;
 }
 
-const AccountManagement = ({ selectedAccount, onSelectAccount, accounts }: AccountManagementProps) => {
+const AccountManagement = ({ selectedAccount, onSelectAccount, accounts, onAccountsChange }: AccountManagementProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddAccount = (newAccount: Account) => {
     const updatedAccounts = [...accounts, newAccount];
     localStorage.setItem('emailAccounts', JSON.stringify(updatedAccounts));
+    onAccountsChange(updatedAccounts);
     if (updatedAccounts.length === 1) {
       onSelectAccount(newAccount);
     }
@@ -31,6 +33,7 @@ const AccountManagement = ({ selectedAccount, onSelectAccount, accounts }: Accou
   const handleRemoveAccount = (email: string) => {
     const updatedAccounts = accounts.filter(account => account.email !== email);
     localStorage.setItem('emailAccounts', JSON.stringify(updatedAccounts));
+    onAccountsChange(updatedAccounts);
     if (selectedAccount?.email === email) {
       onSelectAccount(updatedAccounts[0] || null);
     }

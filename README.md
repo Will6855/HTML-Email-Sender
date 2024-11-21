@@ -4,17 +4,28 @@
 
 A modern, feature-rich Next.js application for composing and sending HTML emails with an intuitive user interface and powerful mailing list management. All configurations are stored securely in your browser, with no server setup required.
 
-[![Next.js](https://img.shields.io/badge/Next.js-14.0-black)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14.2.7-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.1-38B2AC)](https://tailwindcss.com)
+[![Node.js](https://img.shields.io/badge/Node.js-18.x-43853D)](https://nodejs.org)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 > ⚠️ **Security Note**: This application is designed for local use or deployment in controlled environments. Public deployment is not recommended due to the sensitive nature of email sending capabilities.
 
-[Documentation](#documentation) | [Features](#features) | [Installation](#installation) | [Contributing](#contributing)
+[Documentation](#📚-documentation) | [Features](#✨-features) | [Getting Started](#🚀-getting-started) | [Contributing](#🤝-contributing)
 
 ![Application Screenshot](public/screenshot.png)
 
 </div>
+
+## 🎯 Key Features at a Glance
+
+- 📝 **Rich HTML Email Editor** with real-time preview
+- 📊 **Contact Management** with import/export capabilities
+- 💾 **Template System** for reusable email designs
+- 🔒 **Local Storage** for enhanced security
+- 🎨 **Modern UI/UX** with responsive design
+- 🔧 **Multi-Account Support** for different SMTP configurations
 
 ## ✨ Features
 
@@ -28,22 +39,59 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
 ### 👥 Mailing List Management
 - **Comprehensive Contact Management**
   - Create and edit recipient lists
-  - Import functionality (CSV)
+  - Import/export functionality (CSV)
+  - Contact grouping and tagging
+  - Duplicate detection
+  - Bulk operations support
 
-### ⚙️ SMTP Configuration
-- **Secure Settings Management**
-  - Save SMTP settings locally in your browser
-  - Support for popular email services:
-    - Gmail
-    - Outlook
-    - Amazon SES
-    - Custom SMTP servers
+## 📚 Documentation
+
+### Template Management
+- **Save Templates**
+  - Create and save reusable email templates
+  - Use variables in templates for personalization
+  - Preview templates
+
+### Contact Management
+- **Address Book**
+  - Add and organize contacts with custom fields
+  - Create contact groups for easier sending
+  - Import contacts from CSV files
+  - Export your contact list for backup
+
+### SMTP Configuration
+- **Email Service Setup**
+  1. Navigate to Account Settings
+  2. Click "Add New Account"
+  3. Enter your SMTP details:
+     - Name (e.g., "John Doe")
+     - Email (your email address)
+     - Password (your email password or app-specific password)
+     - SMTP Server (e.g., smtp.gmail.com)
+     - Port (usually 587 for TLS)
+
+- **Common SMTP Settings**
+  | Service       | Server           | Port | Security |
+  |--------------|------------------|------|-----------|
+  | Gmail        | smtp.gmail.com   | 587  | TLS      |
+  | Outlook      | smtp.office365.com| 587 | TLS      |
+  | Yahoo Mail   | smtp.mail.yahoo.com| 587| TLS      |
+  | Amazon SES   | (Custom URL)     | 587  | TLS      |
+
+### Security Best Practices
+- Use app-specific passwords for Gmail and other services
+- Enable 2FA on your email accounts
+- Keep your templates and contact lists backed up
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Node.js 18.x or later
-- npm or yarn package manager
+### System Requirements
+
+- **Operating System**: Windows, macOS, or Linux
+- **Node.js**: 18.x or later
+- **Memory**: 2GB RAM minimum
+- **Storage**: 1GB free space
+- **Browser**: Modern browser (Chrome, Firefox, Edge, Safari)
 
 ### Installation
 
@@ -69,30 +117,30 @@ yarn dev
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## 📖 Documentation
-
-### Configuration
-Configure your SMTP settings in the application:
-
-1. Navigate to Settings
-2. Enter your SMTP credentials:
-   - SMTP Host
-   - Port
-   - Username
-   - Password
-
-### Creating Your First Email
-
-1. Click "New Email" button
-2. Compose your email using the rich text editor
-3. Add recipients from your contact list
-4. Preview and send!
-
 ## 🔒 Security
 
 - All sensitive data is stored locally in your browser
 - No data is sent to external servers
 - SMTP connections are secure and encrypted
+
+## ❗ Troubleshooting
+
+### Common Issues
+
+1. **SMTP Connection Failed**
+   - Verify your SMTP credentials
+   - Check if your email provider requires an app-specific password
+   - Ensure your email service allows SMTP access
+
+2. **Template Rendering Issues**
+   - Clear browser cache
+   - Check HTML syntax
+   - Verify CSS compatibility
+
+3. **Import/Export Problems**
+   - Ensure CSV files are properly formatted
+   - Check file encoding (UTF-8 recommended)
+   - Verify required columns are present
 
 ## 🤝 Contributing
 
@@ -119,4 +167,6 @@ If you encounter any issues or have questions, please:
 
 <div align="center">
 Made with ❤️ by Will6855
+
+[Report Bug](https://github.com/Will6855/html-email-sender/issues) · [Request Feature](https://github.com/Will6855/html-email-sender/issues)
 </div>

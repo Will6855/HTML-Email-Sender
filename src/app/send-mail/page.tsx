@@ -52,7 +52,7 @@ const Home = () => {
     }
   }, []);
 
-  const handleSelectAccount = (account: Account) => {
+  const handleSelectAccount = (account: Account | null) => {
     setSelectedAccount(account);
     setForm((prev) => ({ ...prev, selectedAccount: account }));
   };
@@ -215,6 +215,7 @@ const Home = () => {
               selectedAccount={selectedAccount}
               onSelectAccount={handleSelectAccount}
               accounts={accounts}
+              onAccountsChange={setAccounts}
             />
           </div>
 
