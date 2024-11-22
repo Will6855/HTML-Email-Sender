@@ -221,9 +221,6 @@ const Home = () => {
 
           {/* CSV Management Section */}
           <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-6">
-            <div className="flex justify-between items-center mb-4">
-            </div>
-
             <CSVTableEditor 
               data={csvData} 
               onDataChange={handleCsvDataLoaded}
@@ -298,8 +295,8 @@ const Home = () => {
                   placeholder="Enter your HTML email content here."
                 />
               </div>
-              <p className="mt-2 text-sm text-gray-500">
-                Use {'{{columnName}}'} to insert personalized data from your CSV file.
+              <p className="mt-2 text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
+                💡 Tip: Use {'{{columnName}}'} to insert personalized data from your CSV file.
               </p>
             </div>
 

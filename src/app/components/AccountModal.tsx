@@ -23,7 +23,7 @@ const AccountModal = ({ isOpen, onClose, onSave }: AccountModalProps) => {
     password: '',
     name: '',
     smtpServer: '',
-    smtpPort: 0,
+    smtpPort: 587,
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -39,7 +39,7 @@ const AccountModal = ({ isOpen, onClose, onSave }: AccountModalProps) => {
       password: '',
       name: '',
       smtpServer: '',
-      smtpPort: 0,
+      smtpPort: 587,
     });
     onClose();
   };

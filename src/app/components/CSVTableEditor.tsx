@@ -28,8 +28,8 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
     }
   }, [data]);
 
-  const handleCellEditStart = useCallback((rowIndex: number, column: string, value: string) => {
-    setEditingCell({ row: rowIndex, col: column, value });
+  const handleCellEditStart = useCallback((rowIndex: number, column: string, value: string | undefined) => {
+    setEditingCell({ row: rowIndex, col: column, value: value ?? '' });
   }, []);
 
   const handleCellEditChange = useCallback((value: string) => {
@@ -81,8 +81,12 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
   }, [editingHeader, onDataChange]);
 
   const handleAddRow = useCallback(() => {
+    const newRow = headers.reduce((acc, header) => {
+      acc[header] = '';
+      return acc;
+    }, {} as Record<string, string>);
+    
     setRows(prevRows => {
-      const newRow = headers.reduce((acc, header) => ({ ...acc, [header]: '' }), {});
       const newRows = [...prevRows, newRow];
       onDataChange(newRows);
       return newRows;
@@ -195,31 +199,34 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
       </div>
 
       {headers.length > 0 && (
-        <div className="bg-gray-50 p-4 rounded-md">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Select Email Column
-          </label>
-          <select
-            value={emailColumn}
-            onChange={(e) => onEmailColumnChange(e.target.value)}
-            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
-          >
-            <option value="">Select column...</option>
+        <div className="flex items-center space-x-2 mb-2 text-sm">
+          <span className="text-gray-600">Email column:</span>
+          <div className="flex space-x-1 overflow-x-auto">
             {headers.map((header) => (
-              <option key={header} value={header}>
+              <button
+                key={header}
+                onClick={() => onEmailColumnChange(header)}
+                className={`px-2 py-1 rounded ${
+                  emailColumn === header
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
                 {header}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
         </div>
       )}
 
-      <div className="overflow-auto max-h-[300px]">
-        <table className="min-w-full divide-y divide-gray-200">
+      <div className="overflow-auto max-h-[400px] border border-gray-200 rounded-lg">
+        <table className="min-w-full">
           <thead className="bg-gray-50">
             <tr>
               {headers.map((header) => (
-                <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th key={header} className={`px-6 py-3 text-left text-xs font-medium uppercase tracking-wider border-b border-r border-gray-200 ${
+                  emailColumn === header ? 'text-indigo-600 bg-indigo-50' : 'text-gray-500'
+                }`}>
                   {editingHeader && editingHeader.oldHeader === header ? (
                     <input
                       type="text"
@@ -228,22 +235,24 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                       onBlur={handleHeaderEditComplete}
                       onKeyPress={(e) => e.key === 'Enter' && handleHeaderEditComplete()}
                       autoFocus
-                      className="border-b border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 px-2 py-1 w-full"
+                      className="border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 px-2 py-1 w-full rounded-md"
                     />
                   ) : (
-                    <div onClick={() => handleHeaderEditStart(header)} className="cursor-pointer">
-                      {header}
-                    </div>
+                    <>
+                      <div onClick={() => handleHeaderEditStart(header)} className="cursor-pointer">
+                        {header}
+                      </div>
+                      <button
+                        onClick={() => handleRemoveColumn(header)}
+                        className="mt-1 text-xs text-red-600 hover:text-red-800"
+                      >
+                        Remove
+                      </button>
+                    </>
                   )}
-                  <button
-                    onClick={() => handleRemoveColumn(header)}
-                    className="mt-1 text-xs text-red-600 hover:text-red-800"
-                  >
-                    Remove
-                  </button>
                 </th>
               ))}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200">
                 <button
                   onClick={handleAddColumn}
                   className="text-indigo-600 hover:text-indigo-900"
@@ -253,12 +262,12 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white">
             {rows.length > 0 ? (
               rows.map((row, rowIndex) => (
-                <tr key={rowIndex}>
+                <tr key={rowIndex} className="border-b border-gray-200">
                   {headers.map((header) => (
-                    <td key={header} className="px-6 py-4 whitespace-nowrap">
+                    <td key={header} className="px-6 py-4 whitespace-nowrap border-r border-gray-200">
                       {editingCell && editingCell.row === rowIndex && editingCell.col === header ? (
                         <input
                           type="text"
@@ -267,12 +276,12 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                           onBlur={handleCellEditComplete}
                           onKeyPress={(e) => e.key === 'Enter' && handleCellEditComplete()}
                           autoFocus
-                          className="border-b border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 px-2 py-1 w-full"
+                          className="border-gray-300 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 px-2 py-1 w-full rounded-md"
                         />
                       ) : (
                         <div
-                          onClick={() => handleCellEditStart(rowIndex, header, row[header] || '')}
-                          className="cursor-pointer min-h-[40px] focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                          onClick={() => handleCellEditStart(rowIndex, header, row[header])}
+                          className="cursor-pointer min-h-[24px]"
                         >
                           {row[header] || ''}
                         </div>
@@ -282,9 +291,9 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button
                       onClick={() => handleRemoveRow(rowIndex)}
-                      className="text-red-600 hover:text-red-900"
+                      className="text-red-600 hover:text-red-800"
                     >
-                      Remove Row
+                      Remove
                     </button>
                   </td>
                 </tr>
@@ -297,9 +306,9 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
               </tr>
             )}
           </tbody>
-          <tfoot>
+          <tfoot className="bg-gray-50 border-t border-gray-200">
             <tr>
-              <td colSpan={headers.length + 1} className="px-6 py-4 whitespace-nowrap">
+              <td colSpan={headers.length + 1} className="px-6 py-4">
                 <button
                   onClick={handleAddRow}
                   className="text-indigo-600 hover:text-indigo-900"
