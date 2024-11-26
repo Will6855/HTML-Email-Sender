@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "formidable": "^3.5.2",
+    "grapesjs": "^0.22.3",
+    "grapesjs-preset-newsletter": "^1.0.2",
     "next": "^15.0.3",
     "nodemailer": "^6.9.16",
     "papaparse": "^5.4.1",

@@ -1,138 +1,148 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Template {
-  subject: string;
-  htmlContent: string;
-  senderName: string;
+  name: string;
+  content: string;
 }
 
 interface TemplateModalProps {
-  isOpen: boolean;
   onClose: () => void;
-  onSelect: (template: Template) => void;
-  onDelete: (templateName: string) => void;
-  onSave: (templateName: string, template: Template) => void;
-  currentTemplate: Template;
+  onLoadTemplate: (content: string) => void;
+  onSaveTemplate: (name: string, content: string) => void;
+  currentTemplate: string;
 }
 
 const TemplateModal: React.FC<TemplateModalProps> = ({
-  isOpen,
   onClose,
-  onSelect,
-  onDelete,
-  onSave,
+  onLoadTemplate,
+  onSaveTemplate,
   currentTemplate
 }) => {
-  const [templates, setTemplates] = React.useState<Record<string, Template>>({});
-  const [newTemplateName, setNewTemplateName] = React.useState('');
-  const [selectedTemplate, setSelectedTemplate] = React.useState<string | null>(null);
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [newTemplateName, setNewTemplateName] = useState('');
 
-  React.useEffect(() => {
-    if (isOpen) {
-      setTemplates(JSON.parse(localStorage.getItem('emailTemplates') || '{}'));
-      setSelectedTemplate(null);
+  useEffect(() => {
+    try {
+      const savedTemplates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
+      setTemplates(Array.isArray(savedTemplates) ? savedTemplates : []);
+    } catch (error) {
+      console.error('Error loading templates:', error);
+      setTemplates([]);
     }
-  }, [isOpen]);
+  }, []);
 
-  if (!isOpen) return null;
+  const handleSave = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (newTemplateName.trim()) {
+      try {
+        // Let parent handle the actual saving
+        onSaveTemplate(newTemplateName.trim(), currentTemplate);
+        
+        // Update local state
+        const newTemplate = { name: newTemplateName.trim(), content: currentTemplate };
+        setTemplates(prev => [...prev, newTemplate]);
+        
+        // Reset and close
+        setNewTemplateName('');
+        onClose();
+      } catch (error) {
+        console.error('Error saving template:', error);
+      }
+    }
+  };
+
+  const handleLoad = (template: Template, e: React.MouseEvent) => {
+    e.preventDefault();
+    onLoadTemplate(template.content);
+    onClose();
+  };
+
+  const handleDelete = (templateToDelete: Template, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const updatedTemplates = templates.filter(t => t.name !== templateToDelete.name);
+      localStorage.setItem('emailTemplates', JSON.stringify(updatedTemplates));
+      setTemplates(updatedTemplates);
+    } catch (error) {
+      console.error('Error deleting template:', error);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && newTemplateName.trim()) {
+      handleSave(e as any);
+    }
+  };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg p-6 w-96 max-h-[80vh] flex flex-col">
+    <div 
+      className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-lg p-6 w-96 max-h-[80vh] flex flex-col"
+        onClick={e => e.stopPropagation()}
+      >
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium">Templates</h3>
-          <button onClick={onClose} className="text-gray-500">✕</button>
+          <h3 className="text-lg font-medium">Email Templates</h3>
+          <button 
+            onClick={onClose} 
+            className="text-gray-500 hover:text-gray-700"
+            type="button"
+          >
+            ✕
+          </button>
         </div>
 
-        <div className="flex gap-2 mb-4">
+        <form onSubmit={e => { e.preventDefault(); handleSave(e as any); }} className="flex gap-2 mb-4">
           <input
             type="text"
             value={newTemplateName}
-            onChange={e => setNewTemplateName(e.target.value)}
-            onKeyDown={e => {
-              if (e.key === 'Enter' && newTemplateName) {
-                onSave(newTemplateName, currentTemplate);
-                setTemplates(prev => ({ ...prev, [newTemplateName]: currentTemplate }));
-                setNewTemplateName('');
-              }
-            }}
+            onChange={(e) => setNewTemplateName(e.target.value)}
+            onKeyPress={handleKeyPress}
             placeholder="Template name"
-            className="flex-1 px-3 py-2 border rounded"
+            className="flex-1 border rounded px-2 py-1"
           />
-          {newTemplateName && (
-            <button
-              onClick={() => {
-                onSave(newTemplateName, currentTemplate);
-                setTemplates(prev => ({ ...prev, [newTemplateName]: currentTemplate }));
-                setNewTemplateName('');
-              }}
-              className="bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Save
-            </button>
-          )}
-        </div>
+          <button
+            onClick={handleSave}
+            disabled={!newTemplateName.trim()}
+            className="bg-blue-500 text-white px-4 py-1 rounded disabled:bg-blue-300"
+            type="submit"
+          >
+            Save
+          </button>
+        </form>
 
-        <div className="overflow-y-auto flex-1 mb-4">
-          {Object.entries(templates).map(([name, template]) => (
-            <div 
-              key={name} 
-              className={`border rounded mb-2 p-3 cursor-pointer ${
-                selectedTemplate === name ? 'border-blue-500 bg-blue-50' : ''
-              }`}
-              onClick={() => setSelectedTemplate(name)}
+        <div className="flex-1 overflow-y-auto">
+          {templates.map((template) => (
+            <div
+              key={template.name}
+              className="border-b p-3 flex justify-between items-center hover:bg-gray-50"
             >
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="font-medium">{name}</div>
-                  <div className="text-sm text-gray-500 truncate">{template.subject}</div>
-                </div>
+              <span className="flex-1">{template.name}</span>
+              <div className="flex gap-2">
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (confirm('Delete this template?')) {
-                      onDelete(name);
-                      setTemplates(prev => {
-                        const newTemplates = { ...prev };
-                        delete newTemplates[name];
-                        return newTemplates;
-                      });
-                      if (selectedTemplate === name) {
-                        setSelectedTemplate(null);
-                      }
-                    }
-                  }}
-                  className="text-red-500"
+                  onClick={(e) => handleLoad(template, e)}
+                  className="text-blue-500 hover:text-blue-700"
+                  type="button"
+                >
+                  Load
+                </button>
+                <button
+                  onClick={(e) => handleDelete(template, e)}
+                  className="text-red-500 hover:text-red-700"
+                  type="button"
                 >
                   Delete
                 </button>
               </div>
             </div>
           ))}
-          {Object.keys(templates).length === 0 && (
-            <div className="text-gray-500 text-center py-4">No templates saved</div>
-          )}
-        </div>
-
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 border rounded text-gray-600"
-          >
-            Cancel
-          </button>
-          {selectedTemplate && (
-            <button
-              onClick={() => {
-                onSelect(templates[selectedTemplate]);
-                onClose();
-              }}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Load Template
-            </button>
+          {templates.length === 0 && (
+            <p className="text-gray-500 text-center py-4">No templates saved yet</p>
           )}
         </div>
       </div>

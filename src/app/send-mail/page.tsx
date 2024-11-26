@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent, useEffect, useRef } from 'react';
 import AccountManagement from '../components/AccountManagement';
 import CSVTableEditor from '../components/CSVTableEditor';
 import TemplateModal from '../components/TemplateModal';
 import FileDropZone from '../components/FileDropZone';
+import GrapeJSEditor, { GrapeJSEditorRef } from '../components/GrapeJSEditor';
 
 interface Account {
   email: string;
@@ -38,8 +39,8 @@ const Home = () => {
   const [csvData, setCsvData] = useState<Record<string, string>[]>([{ email: '' }]);
   const [headers, setHeaders] = useState<string[]>(['email']);
   const [emailColumn, setEmailColumn] = useState<string>('email');
-  const [previewHtml, setPreviewHtml] = useState<string>('');
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const editorRef = useRef<GrapeJSEditorRef>(null);
 
   useEffect(() => {
     const savedAccounts = localStorage.getItem('emailAccounts');
@@ -60,10 +61,6 @@ const Home = () => {
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-
-    if (name === 'htmlContent') {
-      updateEmailPreview(value);
-    }
   };
 
   const handleFilesDrop = (files: File[]) => {
@@ -161,43 +158,21 @@ const Home = () => {
     alert('All emails sent successfully!');
   };
 
-  const updateEmailPreview = (htmlContent: string) => {
-    if (!csvData.length || !emailColumn) return;
-
-    const previewData = csvData[0];
-    let previewHtml = htmlContent;
-    Object.keys(previewData).forEach((key) => {
-      previewHtml = previewHtml.replace(new RegExp(`{{${key}}}`, 'g'), previewData[key]);
-    });
-
-    setPreviewHtml(previewHtml);
+  const handleLoadTemplate = (content: string) => {
+    if (editorRef.current) {
+      editorRef.current.loadTemplate(content);
+    }
   };
 
-  const handleSaveTemplate = (templateName: string) => {
-    const template = {
-      subject: form.subject,
-      htmlContent: form.htmlContent,
-      senderName: form.senderName,
-    };
-    const templates = JSON.parse(localStorage.getItem('emailTemplates') || '{}');
-    templates[templateName] = template;
-    localStorage.setItem('emailTemplates', JSON.stringify(templates));
-  };
-
-  const handleLoadTemplate = (template: { subject: string; htmlContent: string; senderName: string }) => {
-    setForm((prev) => ({
-      ...prev,
-      subject: template.subject,
-      htmlContent: template.htmlContent,
-      senderName: template.senderName,
-    }));
-    updateEmailPreview(template.htmlContent);
-  };
-
-  const handleDeleteTemplate = (templateName: string) => {
-    const templates = JSON.parse(localStorage.getItem('emailTemplates') || '{}');
-    delete templates[templateName];
-    localStorage.setItem('emailTemplates', JSON.stringify(templates));
+  const handleSaveTemplate = (name: string, content: string) => {
+    try {
+      const templates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
+      const updatedTemplates = templates.filter((t: any) => t.name !== name);
+      updatedTemplates.push({ name, content });
+      localStorage.setItem('emailTemplates', JSON.stringify(updatedTemplates));
+    } catch (error) {
+      console.error('Error saving template:', error);
+    }
   };
 
   return (
@@ -280,24 +255,22 @@ const Home = () => {
               </div>
             </div>
 
-            <div>
-              <label htmlFor="htmlContent" className="block text-sm font-medium text-gray-700">
-                HTML Content
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Email Content
               </label>
-              <div className="mt-1">
-                <textarea
-                  id="htmlContent"
-                  name="htmlContent"
-                  rows={8}
-                  value={form.htmlContent}
-                  onChange={handleChange}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Enter your HTML email content here."
+              <div className="border rounded-lg overflow-hidden">
+                <GrapeJSEditor
+                  ref={editorRef}
+                  initialContent={form.htmlContent}
+                  onChange={(content) => {
+                    setForm((prev) => ({
+                      ...prev,
+                      htmlContent: content,
+                    }));
+                  }}
                 />
               </div>
-              <p className="mt-2 text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
-                💡 Tip: Use {'{{columnName}}'} to insert personalized data from your CSV file.
-              </p>
             </div>
 
             <div>
@@ -313,16 +286,6 @@ const Home = () => {
               </div>
             </div>
 
-            {previewHtml && (
-              <div className="mt-6">
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Preview</h3>
-                <div
-                  className="p-4 border rounded-md bg-white"
-                  dangerouslySetInnerHTML={{ __html: previewHtml }}
-                />
-              </div>
-            )}
-
             <div className="flex justify-end">
               <button
                 type="button"
@@ -336,18 +299,14 @@ const Home = () => {
         </div>
 
         {/* Template Modal */}
-        <TemplateModal
-          isOpen={isTemplateModalOpen}
-          onClose={() => setIsTemplateModalOpen(false)}
-          onSelect={handleLoadTemplate}
-          onDelete={handleDeleteTemplate}
-          onSave={handleSaveTemplate}
-          currentTemplate={{
-            subject: form.subject,
-            htmlContent: form.htmlContent,
-            senderName: form.senderName,
-          }}
-        />
+        {isTemplateModalOpen && (
+          <TemplateModal
+            onClose={() => setIsTemplateModalOpen(false)}
+            onLoadTemplate={handleLoadTemplate}
+            onSaveTemplate={handleSaveTemplate}
+            currentTemplate={form.htmlContent}
+          />
+        )}
       </div>
     </div>
   );
