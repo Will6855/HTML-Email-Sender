@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Account {
   email: string;
@@ -26,10 +27,11 @@ const AccountModal = ({ isOpen, onClose, onSave }: AccountModalProps) => {
     smtpPort: 587,
   });
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useTranslation();
 
   const handleSubmit = () => {
     if (!newAccount.email || !newAccount.password || !newAccount.name || !newAccount.smtpServer || !newAccount.smtpPort) {
-      alert('Please fill in all fields');
+      alert(t('fillAllFields'));
       return;
     }
 
@@ -51,7 +53,7 @@ const AccountModal = ({ isOpen, onClose, onSave }: AccountModalProps) => {
       <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div className="flex flex-col space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">Add Email Account</h3>
+            <h3 className="text-lg font-medium">{t('addAccount')}</h3>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-500"
@@ -61,18 +63,18 @@ const AccountModal = ({ isOpen, onClose, onSave }: AccountModalProps) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <label className="block text-sm font-medium text-gray-700">{t('name')}</label>
             <input
               type="text"
               value={newAccount.name}
               onChange={(e) => setNewAccount({ ...newAccount, name: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="John Doe"
+              placeholder={t('senderNamePlaceholder')}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-medium text-gray-700">{t('email')}</label>
             <input
               type="email"
               value={newAccount.email}
@@ -83,7 +85,7 @@ const AccountModal = ({ isOpen, onClose, onSave }: AccountModalProps) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-medium text-gray-700">{t('password')}</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -102,7 +104,7 @@ const AccountModal = ({ isOpen, onClose, onSave }: AccountModalProps) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">SMTP Server</label>
+            <label className="block text-sm font-medium text-gray-700">{t('smtpServer')}</label>
             <input
               type="text"
               value={newAccount.smtpServer}
@@ -113,7 +115,7 @@ const AccountModal = ({ isOpen, onClose, onSave }: AccountModalProps) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">SMTP Port</label>
+            <label className="block text-sm font-medium text-gray-700">{t('smtpPort')}</label>
             <input
               type="number"
               value={newAccount.smtpPort}
@@ -127,7 +129,7 @@ const AccountModal = ({ isOpen, onClose, onSave }: AccountModalProps) => {
             onClick={handleSubmit}
             className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            Add Account
+            {t('addAccount')}
           </button>
         </div>
       </div>

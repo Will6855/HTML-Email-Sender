@@ -2,6 +2,7 @@
 
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface FileDropZoneProps {
   onFilesDrop: (files: File[]) => void;
@@ -10,6 +11,7 @@ interface FileDropZoneProps {
 }
 
 const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, files, onFileRemove }) => {
+  const { t } = useTranslation();
   const onDrop = useCallback((acceptedFiles: File[]) => {
     onFilesDrop(acceptedFiles);
   }, [onFilesDrop]);
@@ -17,9 +19,9 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, files, onFileR
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return `0 ${t('bytes')}`;
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = [t('bytes'), t('kb'), t('mb'), t('gb')];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
@@ -33,15 +35,15 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, files, onFileR
       >
         <input {...getInputProps()} />
         {isDragActive ? (
-          <p className="text-blue-500">Drop the files here...</p>
+          <p className="text-blue-500">{t('dragAndDrop')}</p>
         ) : (
-          <p className="text-gray-500">Drag and drop files here, or click to select files</p>
+          <p className="text-gray-500">{t('dropFiles')}</p>
         )}
       </div>
       
       {files.length > 0 && (
         <div className="mt-4">
-          <h4 className="text-sm font-medium mb-2">Attachments:</h4>
+          <h4 className="text-sm font-medium mb-2">{t('attachments')}:</h4>
           <div className="space-y-2">
             {files.map((file, index) => (
               <div
@@ -55,6 +57,7 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, files, onFileR
                 <button
                   onClick={() => onFileRemove(index)}
                   className="text-red-500 hover:text-red-700"
+                  aria-label={t('remove')}
                 >
                   ✕
                 </button>

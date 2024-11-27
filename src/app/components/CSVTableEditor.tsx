@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface CSVTableEditorProps {
   data: Record<string, string>[];
+  headers: string[];
   onDataChange: (data: Record<string, string>[]) => void;
   emailColumn: string;
   onEmailColumnChange: (column: string) => void;
@@ -11,21 +13,19 @@ interface CSVTableEditorProps {
 
 const CSVTableEditor: React.FC<CSVTableEditorProps> = ({ 
   data, 
+  headers, 
   onDataChange, 
   emailColumn, 
   onEmailColumnChange 
 }) => {
   const [rows, setRows] = useState<Record<string, string>[]>(data);
-  const [headers, setHeaders] = useState<string[]>(Object.keys(data[0] || []));
   const [editingCell, setEditingCell] = useState<{ row: number; col: string; value: string } | null>(null);
   const [editingHeader, setEditingHeader] = useState<{ oldHeader: string; newHeader: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setRows(data);
-    if (data.length > 0) {
-      setHeaders(Object.keys(data[0]));
-    }
   }, [data]);
 
   const handleCellEditStart = useCallback((rowIndex: number, column: string, value: string | undefined) => {
@@ -61,9 +61,6 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
   const handleHeaderEditComplete = useCallback(() => {
     if (editingHeader && editingHeader.oldHeader !== editingHeader.newHeader) {
       const { oldHeader, newHeader } = editingHeader;
-      setHeaders(prevHeaders =>
-        prevHeaders.map(h => h === oldHeader ? newHeader : h)
-      );
       setRows(prevRows => {
         const newRows = prevRows.map(row => {
           const newRow = { ...row };
@@ -95,14 +92,10 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
 
   const handleAddColumn = useCallback(() => {
     const newHeader = `Column ${headers.length + 1}`;
-    setHeaders(prevHeaders => {
-      const updatedHeaders = [...prevHeaders, newHeader];
-      setRows(prevRows => {
-        const newRows = prevRows.map(row => ({ ...row, [newHeader]: '' }));
-        onDataChange(newRows);
-        return newRows;
-      });
-      return updatedHeaders;
+    setRows(prevRows => {
+      const newRows = prevRows.map(row => ({ ...row, [newHeader]: '' }));
+      onDataChange(newRows);
+      return newRows;
     });
   }, [headers, onDataChange]);
 
@@ -115,7 +108,6 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
   }, [onDataChange]);
 
   const handleRemoveColumn = useCallback((columnToRemove: string) => {
-    setHeaders(prevHeaders => prevHeaders.filter(header => header !== columnToRemove));
     setRows(prevRows => {
       const newRows = prevRows.map(row => {
         const newRow = { ...row };
@@ -174,7 +166,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">📊 CSV Management</h2>
+        <h2 className="text-xl font-semibold">📊 {t('csvManagement')}</h2>
         <div className="flex space-x-2">
           <input
             type="file"
@@ -187,20 +179,20 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
             onClick={() => fileInputRef.current?.click()}
             className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            Import CSV
+            {t('importCsv')}
           </button>
           <button
             onClick={handleExportCSV}
             className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           >
-            Export CSV
+            {t('exportCsv')}
           </button>
         </div>
       </div>
 
       {headers.length > 0 && (
         <div className="flex items-center space-x-2 mb-2 text-sm">
-          <span className="text-gray-600">Email column:</span>
+          <span className="text-gray-600">{t('emailColumnLabel')}</span>
           <div className="flex space-x-1 overflow-x-auto">
             {headers.map((header) => (
               <button
@@ -246,7 +238,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                         onClick={() => handleRemoveColumn(header)}
                         className="mt-1 text-xs text-red-600 hover:text-red-800"
                       >
-                        Remove
+                        {t('removeColumn')}
                       </button>
                     </>
                   )}
@@ -257,7 +249,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                   onClick={handleAddColumn}
                   className="text-indigo-600 hover:text-indigo-900"
                 >
-                  Add Column
+                  {t('addColumn')}
                 </button>
               </th>
             </tr>
@@ -293,7 +285,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                       onClick={() => handleRemoveRow(rowIndex)}
                       className="text-red-600 hover:text-red-800"
                     >
-                      Remove
+                      {t('removeRow')}
                     </button>
                   </td>
                 </tr>
@@ -301,7 +293,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
             ) : (
               <tr>
                 <td colSpan={headers.length + 1} className="px-6 py-4 text-center text-gray-500">
-                  No rows available
+                  {t('noRows')}
                 </td>
               </tr>
             )}
@@ -313,7 +305,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                   onClick={handleAddRow}
                   className="text-indigo-600 hover:text-indigo-900"
                 >
-                  Add Row
+                  {t('addRow')}
                 </button>
               </td>
             </tr>

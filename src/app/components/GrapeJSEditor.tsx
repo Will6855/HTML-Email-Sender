@@ -95,19 +95,7 @@ const GrapeJSEditor = forwardRef<GrapeJSEditorRef, GrapeJSEditorProps>(({ initia
             dropzone: false,
             embedAsBase64: false,
             assets: [],
-            handleAdd: (url: string) => {
-              if (typeof url === 'string' && (url.startsWith('http://') || url.startsWith('https://'))) {
-                const imageComponent = editor.DomComponents.addComponent({
-                  type: 'image',
-                  attributes: { src: url }
-                });
-                editor.Modal.close();
-                return imageComponent;
-              } else {
-                alert('Please enter a valid image URL (must start with http:// or https://)');
-                return null;
-              }
-            }
+            
           },
           deviceManager: {
             devices: [
@@ -147,13 +135,6 @@ const GrapeJSEditor = forwardRef<GrapeJSEditorRef, GrapeJSEditorProps>(({ initia
             },
             init() {
               this.on('change:attributes:src', this.handleSrcChange);
-            },
-            handleSrcChange() {
-              const src = this.getAttributes().src;
-              if (src && typeof src === 'string' && !(src.startsWith('http://') || src.startsWith('https://'))) {
-                this.setAttributes({ src: '' });
-                alert('Please enter a valid image URL (must start with http:// or https://)');
-              }
             }
           }
         });

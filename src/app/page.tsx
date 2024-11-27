@@ -1,6 +1,10 @@
 'use client';
 
+import { useTranslation } from '../hooks/useTranslation';
+
 const Home = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -10,11 +14,11 @@ const Home = () => {
             <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
               <div className="sm:text-center lg:text-left">
                 <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                  <span className="block">HTML Email Sender</span>
-                  <span className="block text-indigo-600 mt-3">Personalized Mass Emailing Made Simple</span>
+                  <span className="block">{t('heroTitle')}</span>
+                  <span className="block text-indigo-600 mt-3">{t('heroSubtitle')}</span>
                 </h1>
                 <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                  Send personalized HTML emails to your contact list with ease. Perfect for newsletters, marketing campaigns, and customer communications.
+                  {t('heroDescription')}
                 </p>
                 <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
@@ -22,7 +26,7 @@ const Home = () => {
                       href="/send-mail"
                       className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
                     >
-                      Get Started
+                      {t('getStarted')}
                     </a>
                   </div>
                 </div>
@@ -36,39 +40,39 @@ const Home = () => {
       <div className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
-            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">Features</h2>
+            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">{t('features')}</h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-              Everything you need for email campaigns
+              {t('featuresTitle')}
             </p>
           </div>
 
           <div className="mt-10">
             <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
               <div className="relative">
-                <div className="text-lg leading-6 font-medium text-gray-900">CSV Support</div>
+                <div className="text-lg leading-6 font-medium text-gray-900">{t('csvSupport')}</div>
                 <p className="mt-2 text-base text-gray-500">
-                  Import your contact list from CSV files and manage your recipients easily.
+                  {t('csvDescription')}
                 </p>
               </div>
 
               <div className="relative">
-                <div className="text-lg leading-6 font-medium text-gray-900">HTML Templates</div>
+                <div className="text-lg leading-6 font-medium text-gray-900">{t('htmlTemplates')}</div>
                 <p className="mt-2 text-base text-gray-500">
-                  Create beautiful HTML emails with full styling support and preview functionality.
+                  {t('htmlTemplatesDescription')}
                 </p>
               </div>
 
               <div className="relative">
-                <div className="text-lg leading-6 font-medium text-gray-900">Personalization</div>
+                <div className="text-lg leading-6 font-medium text-gray-900">{t('personalization')}</div>
                 <p className="mt-2 text-base text-gray-500">
-                  Use dynamic variables to personalize each email with recipient-specific information.
+                  {t('personalizationDescription')}
                 </p>
               </div>
 
               <div className="relative">
-                <div className="text-lg leading-6 font-medium text-gray-900">File Attachments</div>
+                <div className="text-lg leading-6 font-medium text-gray-900">{t('fileAttachments')}</div>
                 <p className="mt-2 text-base text-gray-500">
-                  Attach multiple files to your emails with easy drag-and-drop functionality.
+                  {t('fileAttachmentsDescription')}
                 </p>
               </div>
             </div>
@@ -80,31 +84,31 @@ const Home = () => {
       <div className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center mb-10">
-            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">How It Works</h2>
+            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">{t('howItWorks')}</h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-              Simple three-step process
+              {t('howItWorksTitle')}
             </p>
           </div>
 
           <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10">
             <div className="relative">
-              <div className="text-lg leading-6 font-medium text-gray-900">1. Configure SMTP</div>
+              <div className="text-lg leading-6 font-medium text-gray-900">{t('step1Title')}</div>
               <p className="mt-2 text-base text-gray-500">
-                Set up your SMTP server details to enable email sending capabilities.
+                {t('step1Description')}
               </p>
             </div>
 
             <div className="relative">
-              <div className="text-lg leading-6 font-medium text-gray-900">2. Import Contacts</div>
+              <div className="text-lg leading-6 font-medium text-gray-900">{t('step2Title')}</div>
               <p className="mt-2 text-base text-gray-500">
-                Upload your CSV file containing recipient information and map the email column.
+                {t('step2Description')}
               </p>
             </div>
 
             <div className="relative">
-              <div className="text-lg leading-6 font-medium text-gray-900">3. Create & Send</div>
+              <div className="text-lg leading-6 font-medium text-gray-900">{t('step3Title')}</div>
               <p className="mt-2 text-base text-gray-500">
-                Compose your HTML email, add attachments if needed, and send to your contact list.
+                {t('step3Description')}
               </p>
             </div>
           </div>

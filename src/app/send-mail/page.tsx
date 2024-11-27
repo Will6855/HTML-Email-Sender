@@ -4,8 +4,10 @@ import { useState, ChangeEvent, useEffect, useRef } from 'react';
 import AccountManagement from '../components/AccountManagement';
 import CSVTableEditor from '../components/CSVTableEditor';
 import TemplateModal from '../components/TemplateModal';
+import NotificationModal from '../components/NotificationModal';
 import FileDropZone from '../components/FileDropZone';
 import GrapeJSEditor, { GrapeJSEditorRef } from '../components/GrapeJSEditor';
+import { useTranslation } from '../../hooks/useTranslation';
 
 interface Account {
   email: string;
@@ -24,7 +26,13 @@ interface FormData {
   attachments: File[];
 }
 
+interface Notification {
+  type: 'success' | 'error';
+  message: string;
+}
+
 const Home = () => {
+  const { t } = useTranslation();
   const [form, setForm] = useState<FormData>({
     selectedAccount: null,
     senderName: '',
@@ -40,6 +48,9 @@ const Home = () => {
   const [headers, setHeaders] = useState<string[]>(['email']);
   const [emailColumn, setEmailColumn] = useState<string>('email');
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [notification, setNotification] = useState<Notification | null>(null);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
   const editorRef = useRef<GrapeJSEditorRef>(null);
 
   useEffect(() => {
@@ -108,14 +119,21 @@ const Home = () => {
 
   const handleSendEmails = async () => {
     if (!emailColumn) {
-      alert('Please select an email column.');
+      setNotification({ type: 'error', message: t('selectEmailColumn') });
+      setShowNotificationModal(true);
       return;
     }
 
     if (!form.selectedAccount) {
-      alert('Please select an account.');
+      setNotification({ type: 'error', message: t('selectAccount') });
+      setShowNotificationModal(true);
       return;
     }
+
+    setIsLoading(true);
+    setNotification(null);
+    let successCount = 0;
+    let errorCount = 0;
 
     for (const row of csvData) {
       const email = row[emailColumn];
@@ -149,13 +167,20 @@ const Home = () => {
           const data = await response.json();
           throw new Error(data.error || 'Failed to send email');
         }
+        successCount++;
       } catch (error) {
-        alert(`Failed to send email to ${email}: ${(error as Error).message}`);
-        return;
+        errorCount++;
+        console.error(`Error sending email to ${email}:`, error);
       }
     }
 
-    alert('All emails sent successfully!');
+    setIsLoading(false);
+    if (errorCount === 0) {
+      setNotification({ type: 'success', message: t('emailSendSuccess') });
+    } else {
+      setNotification({ type: 'error', message: `${successCount} emails sent successfully, ${errorCount} failed.` });
+    }
+    setShowNotificationModal(true);
   };
 
   const handleLoadTemplate = (content: string) => {
@@ -179,8 +204,8 @@ const Home = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Email Campaign Manager</h1>
-          <p className="mt-2 text-sm text-gray-600">Send personalized HTML emails to your contact list</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('emailCampaignManager')}</h1>
+          <p className="mt-2 text-sm text-gray-600">{t('emailCampaignDescription')}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -198,6 +223,7 @@ const Home = () => {
           <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-6">
             <CSVTableEditor 
               data={csvData} 
+              headers={headers}
               onDataChange={handleCsvDataLoaded}
               emailColumn={emailColumn}
               onEmailColumnChange={(value) => setEmailColumn(value)}
@@ -210,14 +236,14 @@ const Home = () => {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-gray-900">
               <span className="mr-2">✉️</span>
-              Email Content
+              {t('emailContent')}
             </h2>
             <div className="space-x-2">
               <button
                 onClick={() => setIsTemplateModalOpen(true)}
                 className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
               >
-                Manage Templates
+                {t('manageTemplates')}
               </button>
             </div>
           </div>
@@ -225,7 +251,7 @@ const Home = () => {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
                 <label htmlFor="senderName" className="block text-sm font-medium text-gray-700">
-                  Sender Name
+                  {t('senderName')}
                 </label>
                 <input
                   type="text"
@@ -235,12 +261,12 @@ const Home = () => {
                   onChange={handleChange}
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="John Doe"
+                  placeholder={t('senderNamePlaceholder')}
                 />
               </div>
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
-                  Subject Line
+                  {t('subjectLine')}
                 </label>
                 <input
                   type="text"
@@ -250,14 +276,14 @@ const Home = () => {
                   onChange={handleChange}
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder="Your email subject"
+                  placeholder={t('subjectPlaceholder')}
                 />
               </div>
             </div>
 
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Email Content
+                {t('emailContent')}
               </label>
               <div className="border rounded-lg overflow-hidden">
                 <GrapeJSEditor
@@ -272,10 +298,13 @@ const Home = () => {
                 />
               </div>
             </div>
+            <p className="mt-2 text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
+                💡 {t('personalizationTip')}
+            </p>
 
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Attachments
+                {t('attachments')}
               </label>
               <div className="mt-1 flex items-center space-x-4">
                 <FileDropZone
@@ -286,13 +315,24 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-4">
               <button
                 type="button"
                 onClick={handleSendEmails}
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                disabled={isLoading}
+                className={`px-6 py-3 rounded-md text-white font-medium ${
+                  isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+                }`}
               >
-                Send Emails
+                {isLoading ? (
+                  <span className="flex items-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {t('sending')}
+                  </span>
+                ) : t('sendEmails')}
               </button>
             </div>
           </form>
@@ -305,6 +345,16 @@ const Home = () => {
             onLoadTemplate={handleLoadTemplate}
             onSaveTemplate={handleSaveTemplate}
             currentTemplate={form.htmlContent}
+          />
+        )}
+
+        {/* Notification Modal */}
+        {notification && (
+          <NotificationModal
+            isOpen={showNotificationModal}
+            onClose={() => setShowNotificationModal(false)}
+            type={notification.type}
+            message={notification.message}
           />
         )}
       </div>

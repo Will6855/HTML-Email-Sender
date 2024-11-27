@@ -1,13 +1,11 @@
+'use client';
+
 import './globals.css';
 import { Inter } from 'next/font/google';
 import Header from './components/Header';
+import { LanguageProvider } from '../context/LanguageContext';
 
 const inter = Inter({ subsets: ['latin'] });
-
-export const metadata = {
-  title: 'HTML Email Sender',
-  description: 'Send personalized HTML emails with ease',
-};
 
 export default function RootLayout({
   children,
@@ -16,11 +14,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <title>HTML Email Sender</title>
+        <meta name="description" content="Send personalized HTML emails with ease" />
+      </head>
       <body className={inter.className}>
-        <Header />
-        <main className="min-h-screen bg-gray-100">
-          {children}
-        </main>
+        <LanguageProvider>
+          <Header />
+          <main className="min-h-screen bg-gray-100">
+            {children}
+          </main>
+        </LanguageProvider>
       </body>
     </html>
   );

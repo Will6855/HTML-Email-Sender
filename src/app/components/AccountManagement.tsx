@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import AccountModal from './AccountModal';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Account {
   email: string;
@@ -20,6 +21,7 @@ interface AccountManagementProps {
 
 const AccountManagement = ({ selectedAccount, onSelectAccount, accounts, onAccountsChange }: AccountManagementProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t } = useTranslation();
 
   const handleAddAccount = (newAccount: Account) => {
     const updatedAccounts = [...accounts, newAccount];
@@ -42,12 +44,12 @@ const AccountManagement = ({ selectedAccount, onSelectAccount, accounts, onAccou
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">👥 Account Management</h2>
+        <h2 className="text-xl font-semibold">👥 {t('accountManagement')}</h2>
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
-          Add Account
+          {t('addAccount')}
         </button>
       </div>
 
@@ -89,12 +91,12 @@ const AccountManagement = ({ selectedAccount, onSelectAccount, accounts, onAccou
               }}
               className="text-red-600 hover:text-red-800"
             >
-              Remove
+              {t('remove')}
             </button>
           </div>
         ))}
         {accounts.length === 0 && (
-          <p className="text-gray-500 text-center">No accounts added yet</p>
+          <p className="text-gray-500 text-center">{t('noAccounts')}</p>
         )}
       </div>
     </div>

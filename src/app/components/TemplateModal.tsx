@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Template {
   name: string;
@@ -20,6 +21,7 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
   onSaveTemplate,
   currentTemplate
 }) => {
+  const { t } = useTranslation();
   const [templates, setTemplates] = useState<Template[]>([]);
   const [newTemplateName, setNewTemplateName] = useState('');
 
@@ -28,10 +30,10 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
       const savedTemplates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
       setTemplates(Array.isArray(savedTemplates) ? savedTemplates : []);
     } catch (error) {
-      console.error('Error loading templates:', error);
+      console.error(t('errorLoadingTemplates'), error);
       setTemplates([]);
     }
-  }, []);
+  }, [t]);
 
   const handleSave = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -48,7 +50,7 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
         setNewTemplateName('');
         onClose();
       } catch (error) {
-        console.error('Error saving template:', error);
+        console.error(t('errorSavingTemplate'), error);
       }
     }
   };
@@ -67,7 +69,7 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
       localStorage.setItem('emailTemplates', JSON.stringify(updatedTemplates));
       setTemplates(updatedTemplates);
     } catch (error) {
-      console.error('Error deleting template:', error);
+      console.error(t('errorDeletingTemplate'), error);
     }
   };
 
@@ -87,32 +89,33 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium">Email Templates</h3>
+          <h3 className="text-lg font-medium">{t('emailTemplates')}</h3>
           <button 
             onClick={onClose} 
             className="text-gray-500 hover:text-gray-700"
             type="button"
+            aria-label={t('close')}
           >
             ✕
           </button>
         </div>
 
-        <form onSubmit={e => { e.preventDefault(); handleSave(e as any); }} className="flex gap-2 mb-4">
+        <form onSubmit={e => { e.preventDefault(); handleSave(e as any); }} className="flex gap-3 mb-4">
           <input
             type="text"
             value={newTemplateName}
             onChange={(e) => setNewTemplateName(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Template name"
-            className="flex-1 border rounded px-2 py-1"
+            placeholder={t('templateName')}
+            className="w-[65%] border rounded px-2 py-1"
           />
           <button
             onClick={handleSave}
             disabled={!newTemplateName.trim()}
-            className="bg-blue-500 text-white px-4 py-1 rounded disabled:bg-blue-300"
+            className="w-[35%] bg-blue-500 text-white px-4 py-1 rounded disabled:bg-blue-300 whitespace-nowrap"
             type="submit"
           >
-            Save
+            {t('save')}
           </button>
         </form>
 
@@ -129,20 +132,20 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
                   className="text-blue-500 hover:text-blue-700"
                   type="button"
                 >
-                  Load
+                  {t('load')}
                 </button>
                 <button
                   onClick={(e) => handleDelete(template, e)}
                   className="text-red-500 hover:text-red-700"
                   type="button"
                 >
-                  Delete
+                  {t('delete')}
                 </button>
               </div>
             </div>
           ))}
           {templates.length === 0 && (
-            <p className="text-gray-500 text-center py-4">No templates saved yet</p>
+            <p className="text-gray-500 text-center py-4">{t('noTemplatesSaved')}</p>
           )}
         </div>
       </div>
