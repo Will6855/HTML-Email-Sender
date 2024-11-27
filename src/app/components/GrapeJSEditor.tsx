@@ -89,13 +89,8 @@ const GrapeJSEditor = forwardRef<GrapeJSEditorRef, GrapeJSEditorProps>(({ initia
             ]
           },
           assetManager: {
-            custom: true,
-            autoAdd: false,
-            showUrlInput: true,
-            dropzone: false,
-            embedAsBase64: false,
-            assets: [],
-            
+            embedAsBase64: true,
+            dropzone: true,
           },
           deviceManager: {
             devices: [
@@ -136,63 +131,6 @@ const GrapeJSEditor = forwardRef<GrapeJSEditorRef, GrapeJSEditorProps>(({ initia
             init() {
               this.on('change:attributes:src', this.handleSrcChange);
             }
-          }
-        });
-
-        // Custom image add command
-        editor.Commands.add('open-assets', {
-          run: (editor) => {
-            const modal = editor.Modal;
-            modal.setTitle('Insert Image URL');
-            
-            const container = document.createElement('div');
-            container.style.padding = '20px';
-            
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.placeholder = 'https://example.com/image.jpg';
-            input.style.cssText = 'width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;';
-            
-            const button = document.createElement('button');
-            button.textContent = 'Add Image';
-            button.className = 'gjs-btn-prim';
-            button.style.cssText = 'width: 100%; padding: 8px;';
-            
-            const handleAdd = () => {
-              const url = input.value.trim();
-              if (url.startsWith('http://') || url.startsWith('https://')) {
-                const selected = editor.getSelected();
-                if (!selected) {
-                  alert('Please select an image frame first');
-                  return;
-                }
-
-                if (selected.get('type') !== 'image') {
-                  alert('Please select an image frame');
-                  return;
-                }
-
-                selected.set('attributes', { ...selected.get('attributes'), src: url });
-                modal.close();
-              } else {
-                alert('Please enter a valid image URL (must start with http:// or https://)');
-              }
-            };
-            
-            button.onclick = handleAdd;
-            input.onkeypress = (e) => {
-              if (e.key === 'Enter') {
-                handleAdd();
-              }
-            };
-            
-            container.appendChild(input);
-            container.appendChild(button);
-            modal.setContent(container);
-            modal.open();
-            
-            // Focus input after modal is shown
-            setTimeout(() => input.focus(), 0);
           }
         });
 
