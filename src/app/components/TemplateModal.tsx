@@ -1,52 +1,40 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface Template {
   name: string;
   content: string;
+  subject: string;
+  senderName: string;
 }
 
 interface TemplateModalProps {
   onClose: () => void;
-  onLoadTemplate: (content: string) => void;
+  onLoadTemplate: (content: string, subject?: string, senderName?: string) => void;
   onSaveTemplate: (name: string, content: string) => void;
+  onDeleteTemplate?: (name: string) => void;
   currentTemplate: string;
+  templates?: Template[];
 }
 
 const TemplateModal: React.FC<TemplateModalProps> = ({
   onClose,
   onLoadTemplate,
   onSaveTemplate,
-  currentTemplate
+  onDeleteTemplate,
+  currentTemplate,
+  templates = []
 }) => {
   const { t } = useTranslation();
-  const [templates, setTemplates] = useState<Template[]>([]);
   const [newTemplateName, setNewTemplateName] = useState('');
-
-  useEffect(() => {
-    try {
-      const savedTemplates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
-      setTemplates(Array.isArray(savedTemplates) ? savedTemplates : []);
-    } catch (error) {
-      console.error(t('errorLoadingTemplates'), error);
-      setTemplates([]);
-    }
-  }, [t]);
 
   const handleSave = (e: React.MouseEvent) => {
     e.preventDefault();
     if (newTemplateName.trim()) {
       try {
-        // Let parent handle the actual saving
         onSaveTemplate(newTemplateName.trim(), currentTemplate);
-        
-        // Update local state
-        const newTemplate = { name: newTemplateName.trim(), content: currentTemplate };
-        setTemplates(prev => [...prev, newTemplate]);
-        
-        // Reset and close
         setNewTemplateName('');
         onClose();
       } catch (error) {
@@ -57,19 +45,15 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
 
   const handleLoad = (template: Template, e: React.MouseEvent) => {
     e.preventDefault();
-    onLoadTemplate(template.content);
+    onLoadTemplate(template.content, template.subject, template.senderName);
     onClose();
   };
 
   const handleDelete = (templateToDelete: Template, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    try {
-      const updatedTemplates = templates.filter(t => t.name !== templateToDelete.name);
-      localStorage.setItem('emailTemplates', JSON.stringify(updatedTemplates));
-      setTemplates(updatedTemplates);
-    } catch (error) {
-      console.error(t('errorDeletingTemplate'), error);
+    if (onDeleteTemplate) {
+      onDeleteTemplate(templateToDelete.name);
     }
   };
 
@@ -100,27 +84,27 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
           </button>
         </div>
 
-        <form onSubmit={e => { e.preventDefault(); handleSave(e as any); }} className="flex gap-3 mb-4">
-          <input
-            type="text"
+        <div className="flex mb-4">
+          <input 
+            type="text" 
+            placeholder={t('templateName')}
             value={newTemplateName}
             onChange={(e) => setNewTemplateName(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder={t('templateName')}
-            className="w-[65%] border rounded px-2 py-1"
+            className="flex-grow mr-2 p-2 border rounded"
           />
-          <button
+          <button 
             onClick={handleSave}
             disabled={!newTemplateName.trim()}
-            className="w-[35%] bg-blue-500 text-white px-4 py-1 rounded disabled:bg-blue-300 whitespace-nowrap"
+            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
             type="submit"
           >
             {t('save')}
           </button>
-        </form>
+        </div>
 
-        <div className="flex-1 overflow-y-auto">
-          {templates.map((template) => (
+        <div className="overflow-y-auto">
+        {templates.map((template) => (
             <div
               key={template.name}
               className="border-b p-3 flex justify-between items-center hover:bg-gray-50"

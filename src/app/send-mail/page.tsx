@@ -1,6 +1,9 @@
-'use client';
+"use client";
 
-import { useState, ChangeEvent, useEffect, useRef } from 'react';
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { LanguageProvider } from '../../context/LanguageContext';
+import { useState, ChangeEvent, useEffect, useRef, useCallback } from 'react';
 import AccountManagement from '../components/AccountManagement';
 import CSVTableEditor from '../components/CSVTableEditor';
 import TemplateModal from '../components/TemplateModal';
@@ -31,8 +34,37 @@ interface Notification {
   message: string;
 }
 
+export default function SendMailPage() {
+  const { status, data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/login");
+    }
+  });
+
+  if (status === "loading") {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin inline-block w-16 h-16 border-[4px] border-current border-t-transparent text-indigo-600 rounded-full" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+          <p className="mt-4 text-lg text-gray-600">Loading your email sender...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <LanguageProvider>
+      <Home />
+    </LanguageProvider>
+  );
+}
+
 const Home = () => {
   const { t } = useTranslation();
+  const { status, data: session } = useSession();
   const [form, setForm] = useState<FormData>({
     selectedAccount: null,
     senderName: '',
@@ -51,18 +83,31 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState<Notification | null>(null);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [templates, setTemplates] = useState<{ 
+    name: string; 
+    content: string;
+    subject: string;
+    senderName: string;
+  }[]>([]);
   const editorRef = useRef<GrapeJSEditorRef>(null);
 
-  useEffect(() => {
-    const savedAccounts = localStorage.getItem('emailAccounts');
-    if (savedAccounts) {
-      const parsedAccounts = JSON.parse(savedAccounts);
-      setAccounts(parsedAccounts);
-      if (parsedAccounts.length > 0 && !selectedAccount) {
-        handleSelectAccount(parsedAccounts[0]);
+  const loadTemplates = useCallback(async () => {
+    try {
+      const response = await fetch('/api/templates');
+      if (response.ok) {
+        const loadedTemplates = await response.json();
+        setTemplates(loadedTemplates);
+      } else {
+        console.error('Error loading templates:', await response.text());
       }
+    } catch (error) {
+      console.error('Error loading templates:', error);
     }
   }, []);
+
+  useEffect(() => {
+    loadTemplates();
+  }, [loadTemplates]);
 
   const handleSelectAccount = (account: Account | null) => {
     setSelectedAccount(account);
@@ -88,22 +133,6 @@ const Home = () => {
     }));
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setForm((prev) => ({
-        ...prev,
-        attachments: [...prev.attachments, ...Array.from(e.target.files!)],
-      }));
-    }
-  };
-
-  const handleRemoveAttachment = (index: number) => {
-    setForm((prev) => ({
-      ...prev,
-      attachments: prev.attachments.filter((_, i) => i !== index),
-    }));
-  };
-
   const handleCsvDataLoaded = (data: Record<string, string>[]) => {
     setCsvData(data);
     const newHeaders = Object.keys(data[0] || {});
@@ -111,10 +140,6 @@ const Home = () => {
     if (!emailColumn || !newHeaders.includes(emailColumn)) {
       setEmailColumn(newHeaders[0] || '');
     }
-  };
-
-  const handleEmailColumnChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setEmailColumn(e.target.value);
   };
 
   const handleSendEmails = async () => {
@@ -183,20 +208,67 @@ const Home = () => {
     setShowNotificationModal(true);
   };
 
-  const handleLoadTemplate = (content: string) => {
+  const handleLoadTemplate = (content: string, subject?: string, senderName?: string) => {
     if (editorRef.current) {
       editorRef.current.loadTemplate(content);
     }
+    setForm((prev) => ({ 
+      ...prev, 
+      htmlContent: content, 
+      subject: subject || '', 
+      senderName: senderName || '' 
+    }));
   };
 
-  const handleSaveTemplate = (name: string, content: string) => {
+  const handleSaveTemplate = async (name: string, content: string) => {
     try {
-      const templates = JSON.parse(localStorage.getItem('emailTemplates') || '[]');
-      const updatedTemplates = templates.filter((t: any) => t.name !== name);
-      updatedTemplates.push({ name, content });
-      localStorage.setItem('emailTemplates', JSON.stringify(updatedTemplates));
+      let senderName = form.senderName || '';
+      let subject = form.subject || '';
+
+      const response = await fetch('/api/templates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          name, 
+          content,
+          senderName,
+          subject
+        }),
+      });
+
+      if (response.ok) {
+        await loadTemplates(); // Refresh templates after saving
+        setIsTemplateModalOpen(false);
+      } else {
+        const errorData = await response.json();
+        console.error('Error saving template:', errorData);
+      }
     } catch (error) {
       console.error('Error saving template:', error);
+    }
+  };
+
+  const handleDeleteTemplate = async (name: string) => {
+    if (status !== 'authenticated' || !session?.user) {
+      console.error('User not authenticated');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/templates?name=${encodeURIComponent(name)}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        await loadTemplates(); // Refresh templates after deleting
+      } else {
+        const errorData = await response.json();
+        console.error('Error deleting template:', errorData);
+      }
+    } catch (error) {
+      console.error('Error deleting template:', error);
     }
   };
 
@@ -212,6 +284,7 @@ const Home = () => {
           {/* Account Management Section */}
           <div className="bg-white rounded-lg shadow-sm p-6">
             <AccountManagement 
+              userId={session?.user?.id || ''}
               selectedAccount={selectedAccount}
               onSelectAccount={handleSelectAccount}
               accounts={accounts}
@@ -344,7 +417,9 @@ const Home = () => {
             onClose={() => setIsTemplateModalOpen(false)}
             onLoadTemplate={handleLoadTemplate}
             onSaveTemplate={handleSaveTemplate}
+            onDeleteTemplate={handleDeleteTemplate}
             currentTemplate={form.htmlContent}
+            templates={templates}
           />
         )}
 
@@ -361,5 +436,3 @@ const Home = () => {
     </div>
   );
 };
-
-export default Home;

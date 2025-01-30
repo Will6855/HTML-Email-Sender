@@ -122,4 +122,28 @@ export const fr = {
   step2Description: 'Téléchargez votre fichier CSV contenant les informations des destinataires et mappez la colonne email.',
   step3Title: '3. Créer et envoyer',
   step3Description: 'Composez votre email HTML, ajoutez des pièces jointes si nécessaire, et envoyez à votre liste de contacts.',
+
+  loginTitle: 'Connexion',
+  username: 'Nom d\'utilisateur',
+  password: 'Mot de passe',
+  signIn: 'Se connecter',
+  forgotPassword: 'Mot de passe oublié ?',
+  noAccount: 'Pas de compte ?',
+  signUp: 'S\'inscrire',
+
+  registerTitle: 'Inscription',
+  firstName: 'Prénom',
+  lastName: 'Nom',
+  email: 'Email',
+  password: 'Mot de passe',
+  confirmPassword: 'Confirmer le mot de passe',
+  submit: 'Créer un compte',
+  alreadyHaveAccount: 'Vous avez deja un compte ?',
+  signIn: 'Se connecter',
+
+
+  login: 'Connexion',
+  register: 'Inscription',
+  logout: 'Déconnexion',
+  welcome: 'Bienvenue, '
 };

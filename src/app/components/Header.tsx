@@ -2,14 +2,23 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import LanguageSwitch from './LanguageSwitch';
 import { useLanguage } from '@/context/LanguageContext';
+import { signOut, useSession } from "next-auth/react";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const { t } = useLanguage();
+  const { data: session, status } = useSession();
+
+  const handleLogout = () => {
+    signOut({ redirect: false }).then(() => {
+      router.push("/login");
+    });
+  };
 
   const navigation = [
     { name: t('home'), href: '/' },
@@ -47,7 +56,27 @@ const Header = () => {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <LanguageSwitch />
+            {status === 'authenticated' ? (
+            <div className="flex items-center space-x-2">
+              <span className="text-gray-700">
+                {t('welcome')}{session.user.username}
+              </span>
+              <button 
+                onClick={handleLogout}
+                className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors"
+              >
+                {t('logout')}
+              </button>
+            </div>
+          ) : (
+            <a 
+              href="/login" 
+              className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors"
+            >
+              {t('signIn')}
+            </a>
+          )}
+          <LanguageSwitch />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="sm:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"

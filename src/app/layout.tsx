@@ -4,6 +4,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import Header from './components/Header';
 import { LanguageProvider } from '../context/LanguageContext';
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,12 +20,14 @@ export default function RootLayout({
         <meta name="description" content="Send personalized HTML emails with ease" />
       </head>
       <body className={inter.className}>
-        <LanguageProvider>
-          <Header />
-          <main className="min-h-screen bg-gray-100">
-            {children}
-          </main>
-        </LanguageProvider>
+        <SessionProvider>
+          <LanguageProvider>
+            <Header />
+            <main className="min-h-screen bg-gray-100">
+              {children}
+            </main>
+          </LanguageProvider>
+        </SessionProvider>
       </body>
     </html>
   );

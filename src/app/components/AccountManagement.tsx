@@ -5,6 +5,7 @@ import AccountModal from './AccountModal';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface Account {
+  id?: string;
   email: string;
   password: string;
   name: string;
@@ -13,33 +14,107 @@ interface Account {
 }
 
 interface AccountManagementProps {
-  selectedAccount: Account | null;
-  onSelectAccount: (account: Account | null) => void;
-  accounts: Account[];
-  onAccountsChange: (accounts: Account[]) => void;
+  userId: string;
+  selectedAccount?: Account | null;
+  onSelectAccount?: (account: Account | null) => void;
+  accounts?: Account[];
+  onAccountsChange?: React.Dispatch<React.SetStateAction<Account[]>>;
 }
 
-const AccountManagement = ({ selectedAccount, onSelectAccount, accounts, onAccountsChange }: AccountManagementProps) => {
+const AccountManagement = ({
+  userId,
+  selectedAccount: initialSelectedAccount,
+  onSelectAccount,
+  accounts: initialAccounts,
+  onAccountsChange,
+}: AccountManagementProps) => {
+  const [accounts, setAccounts] = useState<Account[]>(initialAccounts || []);
+  const [selectedAccount, setSelectedAccount] = useState<Account | null>(
+    initialSelectedAccount || null
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation();
 
-  const handleAddAccount = (newAccount: Account) => {
-    const updatedAccounts = [...accounts, newAccount];
-    localStorage.setItem('emailAccounts', JSON.stringify(updatedAccounts));
-    onAccountsChange(updatedAccounts);
-    if (updatedAccounts.length === 1) {
-      onSelectAccount(newAccount);
+  useEffect(() => {
+    const loadAccounts = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/emailAccounts');
+        if (!response.ok) {
+          throw new Error('Failed to fetch accounts');
+        }
+        const fetchedAccounts = await response.json();
+        setAccounts(fetchedAccounts);
+        
+        if (fetchedAccounts.length > 0) {
+          setSelectedAccount(fetchedAccounts[0]);
+        }
+      } catch (error) {
+        console.error('Error loading accounts:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadAccounts();
+  }, []);
+
+  const handleAddAccount = async (newAccount: Account) => {
+    try {
+      const createdAccount = await fetch('/api/emailAccounts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newAccount),
+      });
+
+      const updatedAccounts = [...accounts, newAccount];
+
+      setAccounts(updatedAccounts);
+      if (updatedAccounts.length === 1) {
+        setSelectedAccount(newAccount);
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error adding account:', error);
+      alert(t('errorAddingAccount'));
     }
   };
 
-  const handleRemoveAccount = (email: string) => {
-    const updatedAccounts = accounts.filter(account => account.email !== email);
-    localStorage.setItem('emailAccounts', JSON.stringify(updatedAccounts));
-    onAccountsChange(updatedAccounts);
-    if (selectedAccount?.email === email) {
-      onSelectAccount(updatedAccounts[0] || null);
+  const handleRemoveAccount = async (email: string) => {
+    try {
+      const accountToRemove = accounts.find(account => account.email === email);
+      
+      if (accountToRemove?.id) {
+        await fetch(`/api/emailAccounts/${accountToRemove.id}`, {
+          method: 'DELETE',
+        });
+      }
+
+      const updatedAccounts = accounts.filter(account => account.email !== email);
+      setAccounts(updatedAccounts);
+      
+      if (selectedAccount?.email === email) {
+        setSelectedAccount(updatedAccounts[0] || null);
+      }
+    } catch (error) {
+      console.error('Error removing account:', error);
+      alert(t('errorRemovingAccount'));
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center">
+        <div className="text-center">
+          <div className="animate-spin inline-block w-16 h-16 border-[4px] border-current border-t-transparent text-indigo-600 rounded-full" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+          <p className="mt-4 text-lg text-gray-600">Loading accounts...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -66,7 +141,10 @@ const AccountManagement = ({ selectedAccount, onSelectAccount, accounts, onAccou
             className={`flex items-center justify-between p-4 border rounded-lg bg-white shadow-sm cursor-pointer hover:border-indigo-500 transition-colors ${
               selectedAccount?.email === account.email ? 'border-indigo-500 ring-2 ring-indigo-500' : ''
             }`}
-            onClick={() => onSelectAccount(account)}
+            onClick={() => {
+              setSelectedAccount(account);
+              onSelectAccount?.(account);
+            }}
           >
             <div className="flex items-center space-x-3">
               <div className={`w-4 h-4 rounded-full border-2 ${
