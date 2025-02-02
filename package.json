@@ -21,7 +21,7 @@
     "grapesjs": "^0.22.3",
     "grapesjs-preset-newsletter": "^1.0.2",
     "mysql2": "^3.12.0",
-    "next": "^15.0.3",
+    "next": "^15.1.6",
     "next-auth": "^4.24.11",
     "nodemailer": "^6.9.16",
     "papaparse": "^5.4.1",
