@@ -35,7 +35,7 @@ interface Notification {
 
 export default function SendMailPage() {
   const { t } = useTranslation();
-  
+
   const { status, data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -281,7 +281,7 @@ const Home = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Account Management Section */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-lg p-6">
             <AccountManagement 
               userId={session?.user?.id || ''}
               selectedAccount={selectedAccount}
@@ -292,7 +292,7 @@ const Home = () => {
           </div>
 
           {/* CSV Management Section */}
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-6">
+          <div className="lg:col-span-2 bg-white rounded-lg shadow-lg p-6">
             <CSVTableEditor 
               data={csvData} 
               headers={headers}
@@ -304,7 +304,7 @@ const Home = () => {
         </div>
 
         {/* Email Content Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-sm p-6">
+        <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-gray-900">
               <span className="mr-2">✉️</span>
