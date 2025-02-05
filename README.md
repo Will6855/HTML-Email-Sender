@@ -4,7 +4,7 @@
 
 A modern, feature-rich Next.js application for composing and sending HTML emails with an intuitive user interface and powerful mailing list management. All configurations are stored securely in your browser, with no server setup required.
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.0.3-black)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.1.6-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6.3-blue)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.15-38B2AC)](https://tailwindcss.com)
 [![Node.js](https://img.shields.io/badge/Node.js-18.x-43853D)](https://nodejs.org)
