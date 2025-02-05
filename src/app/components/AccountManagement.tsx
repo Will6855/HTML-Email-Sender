@@ -122,6 +122,9 @@ const AccountManagement = ({
   };
 
   const handleRemoveAccount = async (email: string) => {
+    const confirmRemove = window.confirm(`${t('confirmRemoveAccount')} ${email}`);
+    if (!confirmRemove) return;
+
     try {
       const accountToRemove = accounts.find(account => account.email === email);
       

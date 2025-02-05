@@ -23,6 +23,7 @@ export const fr = {
   noAccounts: 'Aucun compte ajouté',
   edit: 'Modifier',
   errorEditingAccount: 'Échec de la modification du compte. Veuillez réessayer.',
+  confirmRemoveAccount: 'Êtes-vous sûr(e) de vouloir supprimer le compte avec l\'email :',
 
   // Email Form
   senderName: 'Nom de l\'expéditeur',

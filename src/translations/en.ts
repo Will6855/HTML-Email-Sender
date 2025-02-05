@@ -23,6 +23,7 @@ export const en = {
   selectAccountError: 'Please select an account',
   edit: 'Edit',
   errorEditingAccount: 'Failed to edit account. Please try again.',
+  confirmRemoveAccount: 'Are you sure you want to remove the account with the email: ',
 
   // Email Form
   senderName: 'Sender Name',

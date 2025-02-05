@@ -87,17 +87,17 @@ export async function POST(request: NextRequest) {
     }
 
     const userId = session.user.id;
-    const { email, encryptedPassword, name, smtpServer, smtpPort } = await request.json();
+    const { email, password, name, smtpServer, smtpPort } = await request.json();
 
     // Validate input
-    if (!email || !encryptedPassword || !name || !smtpServer || !smtpPort) {
+    if (!email || !password || !name || !smtpServer || !smtpPort) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
     const newAccount = await prisma.emailAccount.create({
       data: {
         email,
-        password: encryptedPassword,
+        password: password,
         name,
         smtpServer,
         smtpPort,
