@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface NotificationModalProps {
   isOpen: boolean;

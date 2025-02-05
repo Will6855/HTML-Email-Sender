@@ -9,8 +9,6 @@ import { useRouter } from 'next/navigation';
 // Registration schema based on Prisma GeneralAccount model
 const registerSchema = z.object({
   username: z.string().min(3, { message: "Username must be at least 3 characters" }),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" })
 });
@@ -80,28 +78,6 @@ export default function Register() {
             {errors.username && (
               <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
             )}
-          </div>
-
-          <div>
-            <label htmlFor="firstName" className="block mb-2">First Name</label>
-            <input 
-              {...register('firstName')}
-              type="text" 
-              id="firstName"
-              className="w-full px-3 py-2 border rounded-md"
-              placeholder="Enter your first name"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="lastName" className="block mb-2">Last Name</label>
-            <input 
-              {...register('lastName')}
-              type="text" 
-              id="lastName"
-              className="w-full px-3 py-2 border rounded-md"
-              placeholder="Enter your last name"
-            />
           </div>
 
           <div>

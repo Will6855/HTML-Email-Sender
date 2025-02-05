@@ -23,6 +23,7 @@ const Header = () => {
   const navigation = [
     { name: t('home'), href: '/' },
     { name: t('newEmail'), href: '/send-mail' },
+    { name: t('profile'), href: '/profile' },
   ];
 
   return (

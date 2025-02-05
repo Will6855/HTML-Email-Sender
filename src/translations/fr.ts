@@ -2,6 +2,7 @@ export const fr = {
   // Navigation
   home: 'Accueil',
   newEmail: 'Nouvel Email',
+  profile: 'Compte',
 
   // Account Management
   accounts: 'Comptes',
@@ -145,5 +146,53 @@ export const fr = {
   login: 'Connexion',
   register: 'Inscription',
   logout: 'Déconnexion',
-  welcome: 'Bienvenue, '
+  welcome: 'Bienvenue, ',
+    
+  // Profile Page
+  userInformation: 'Informations utilisateur',
+  username: 'Nom d\'utilisateur',
+  email: 'Email',
+  role: 'Rôle',
+  emailAccounts: 'Comptes Email',
+  addEmailAccount: 'Ajouter un compte Email',
+  noEmailAccountsFound: 'Aucun compte email trouvé',
+  name: 'Nom',
+  edit: 'Modifier',
+  delete: 'Supprimer',
+  accountManagement: 'Gestion du compte',
+  changePassword: 'Changer le mot de passe',
+  adminDashboard: 'Tableau de bord Admin',
+
+  // Change Email Page
+  changeEmail: 'Changer l\'email',
+  newEmail: 'Nouvel email',
+  emailChangedSuccessfully: 'Email changé avec succès',
+  enterNewEmail: 'Entrez votre nouvelle adresse email',
+  currentPassword: 'Mot de passe actuel',
+  enterCurrentPassword: 'Entrez votre mot de passe actuel',
+  backToProfile: 'Retour au profil',
+
+  // Change Password Page
+  passwordsDoNotMatch: 'Les mots de passe ne correspondent pas',
+  passwordChangedSuccessfully: 'Mot de passe changé avec succès',
+  newPassword: 'Nouveau mot de passe',
+  enterNewPassword: 'Entrez le nouveau mot de passe',
+  confirmPassword: 'Confirmer le mot de passe',
+  confirmNewPassword: 'Confirmez le nouveau mot de passe',
+
+  // Admin Dashboard Page
+  adminDashboard: 'Tableau de bord Admin',
+  generateResetLink: 'Générer un lien de réinitialisation',
+  selectUserForPasswordReset: 'Sélectionner un utilisateur pour la réinitialisation du mot de passe',
+  selectAUser: 'Sélectionner un utilisateur',
+  passwordResetLink: 'Lien de réinitialisation du mot de passe',
+  resetLinkExpiration: 'Ce lien expirera dans 1 heure. Partagez-le de manière sécurisée avec l\'utilisateur.',
+  copy: 'Copier',
+  failedToLoadUsers: 'Impossible de charger les utilisateurs',
+  pleaseSelectAUser: 'Veuillez sélectionner un utilisateur',
+  failedToGenerateResetLink: 'Échec de la génération du lien de réinitialisation',
+  unexpectedError: 'Une erreur inattendue s\'est produite',
+  generatePasswordResetLinksForUsers: 'Générer des liens de réinitialisation de mot de passe pour les utilisateurs',
+
+  loading: 'Chargement...'
 };

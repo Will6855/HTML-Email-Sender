@@ -27,7 +27,9 @@ export const authOptions: AuthOptions = {
           return {
             id: user.id.toString(),
             username: user.username,
-            role: user.role
+            role: user.role,
+            email: user.email,
+            createdAt: user.createdAt
           };
         }
 
@@ -37,19 +39,28 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user }) {
-      // Add username and role to token if user is found
       if (user) {
         token.id = user.id;
         token.username = user.username;
         token.role = user.role;
+        token.email = user.email;
+        token.createdAt = user.createdAt;
       }
       return token;
     },
     async session({ session, token }) {
-      // Add username and role to session
-      session.user.id = token.id;
-      session.user.username = token.username;
-      session.user.role = token.role;
+      // Fetch the latest user data from the database
+      const user = await prisma.generalAccount.findUnique({
+        where: { id: token.id }
+      });
+
+      if (user) {
+        session.user.id = token.id;
+        session.user.username = user.username;
+        session.user.role = user.role;
+        session.user.email = user.email;
+        session.user.createdAt = user.createdAt;
+      }
       return session;
     }
   },
@@ -57,8 +68,10 @@ export const authOptions: AuthOptions = {
     signIn: "/login"
   },
   session: {
-    strategy: "jwt"
-  }
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
 };
 
 const handler = NextAuth(authOptions);

@@ -2,6 +2,7 @@ export const en = {
   // Navigation
   home: 'Home',
   newEmail: 'New Email',
+  profile: 'Account',
 
   // Account Management
   accounts: 'Accounts',
@@ -41,7 +42,7 @@ export const en = {
   removeRow: 'Remove',
   noRows: 'No rows available',
   column: 'Column',
-
+  
   // File Drop Zone
   dragAndDrop: 'Drop the files here...',
   dropFiles: 'Drag and drop files here, or click to select files',
@@ -145,5 +146,53 @@ export const en = {
   login: 'Login',
   register: 'Sign Up',
   logout: 'Log Out',
-  welcome: 'Welcome, '
+  welcome: 'Welcome, ',
+
+  // Profile Page
+  userInformation: 'User Information',
+  username: 'Username',
+  email: 'Email',
+  role: 'Role',
+  emailAccounts: 'Email Accounts',
+  addEmailAccount: 'Add Email Account',
+  noEmailAccountsFound: 'No email accounts found',
+  name: 'Name',
+  edit: 'Edit',
+  delete: 'Delete',
+  accountManagement: 'Account Management',
+  changePassword: 'Change Password',
+  adminDashboard: 'Admin Dashboard',
+
+  // Change Email Page
+  changeEmail: 'Change Email',
+  newEmail: 'New Email',
+  emailChangedSuccessfully: 'Email changed successfully',
+  enterNewEmail: 'Enter new email address',
+  currentPassword: 'Current Password',
+  enterCurrentPassword: 'Enter your current password',
+  backToProfile: 'Back to Profile',
+
+  // Change Password Page
+  passwordsDoNotMatch: 'Passwords do not match',
+  passwordChangedSuccessfully: 'Password changed successfully',
+  newPassword: 'New Password',
+  enterNewPassword: 'Enter new password',
+  confirmPassword: 'Confirm Password',
+  confirmNewPassword: 'Confirm new password',
+
+  // Admin Dashboard Page
+  adminDashboard: 'Admin Dashboard',
+  generateResetLink: 'Generate Reset Link',
+  selectUserForPasswordReset: 'Select User for Password Reset',
+  selectAUser: 'Select a user',
+  passwordResetLink: 'Password Reset Link',
+  resetLinkExpiration: 'This link will expire in 1 hour. Share it securely with the user.',
+  copy: 'Copy',
+  failedToLoadUsers: 'Failed to load users',
+  pleaseSelectAUser: 'Please select a user',
+  failedToGenerateResetLink: 'Failed to generate reset link',
+  unexpectedError: 'An unexpected error occurred',
+  generatePasswordResetLinksForUsers: 'Generate password reset links for users',
+
+  loading: 'Loading...'
 };

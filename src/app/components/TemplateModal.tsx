@@ -69,7 +69,7 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
       onClick={onClose}
     >
       <div 
-        className="bg-white rounded-lg p-6 w-96 max-h-[80vh] flex flex-col"
+        className="bg-white rounded-lg p-6 max-h-[80vh] flex flex-col"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-4">
@@ -84,19 +84,19 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
           </button>
         </div>
 
-        <div className="flex mb-4">
+        <div className="flex mb-4 space-x-2">
           <input 
             type="text" 
             placeholder={t('templateName')}
             value={newTemplateName}
             onChange={(e) => setNewTemplateName(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="flex-grow mr-2 p-2 border rounded"
+            className="p-2 border rounded"
           />
           <button 
             onClick={handleSave}
             disabled={!newTemplateName.trim()}
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 flex-shrink-0"
             type="submit"
           >
             {t('save')}

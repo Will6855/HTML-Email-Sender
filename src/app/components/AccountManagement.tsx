@@ -110,7 +110,7 @@ const AccountManagement = ({
           <div className="animate-spin inline-block w-16 h-16 border-[4px] border-current border-t-transparent text-indigo-600 rounded-full" role="status">
             <span className="sr-only">Loading...</span>
           </div>
-          <p className="mt-4 text-lg text-gray-600">Loading accounts...</p>
+          <p className="mt-4 text-lg text-gray-600">Loading...</p>
         </div>
       </div>
     )

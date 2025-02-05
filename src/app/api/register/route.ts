@@ -8,8 +8,6 @@ export async function POST(request: NextRequest) {
     const { 
       username, 
       password, 
-      firstName, 
-      lastName, 
       email 
     } = await request.json();
 
@@ -55,9 +53,7 @@ export async function POST(request: NextRequest) {
       data: {
         username,
         password: hashedPassword,
-        firstName: firstName || undefined,
-        lastName: lastName || undefined,
-        email: email || undefined,
+        email: email,
         role: 'USER' // Default role
       }
     });

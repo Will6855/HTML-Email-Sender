@@ -2,7 +2,6 @@
 
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import { LanguageProvider } from '../../context/LanguageContext';
 import { useState, ChangeEvent, useEffect, useRef, useCallback } from 'react';
 import AccountManagement from '../components/AccountManagement';
 import CSVTableEditor from '../components/CSVTableEditor';
@@ -10,7 +9,7 @@ import TemplateModal from '../components/TemplateModal';
 import NotificationModal from '../components/NotificationModal';
 import FileDropZone from '../components/FileDropZone';
 import GrapeJSEditor, { GrapeJSEditorRef } from '../components/GrapeJSEditor';
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Account {
   email: string;
@@ -35,6 +34,8 @@ interface Notification {
 }
 
 export default function SendMailPage() {
+  const { t } = useTranslation();
+  
   const { status, data: session } = useSession({
     required: true,
     onUnauthenticated() {
@@ -47,18 +48,16 @@ export default function SendMailPage() {
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <div className="text-center">
           <div className="animate-spin inline-block w-16 h-16 border-[4px] border-current border-t-transparent text-indigo-600 rounded-full" role="status">
-            <span className="sr-only">Loading...</span>
+            <span className="sr-only">{t('loading')}</span>
           </div>
-          <p className="mt-4 text-lg text-gray-600">Loading your email sender...</p>
+          <p className="mt-4 text-lg text-gray-600">{t('loading')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <LanguageProvider>
-      <Home />
-    </LanguageProvider>
+    <Home />
   );
 }
 

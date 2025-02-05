@@ -28,8 +28,8 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
     setRows(data);
   }, [data]);
 
-  const handleCellEditStart = useCallback((rowIndex: number, column: string, value: string | undefined) => {
-    setEditingCell({ row: rowIndex, col: column, value: value ?? '' });
+  const handleCellEditStart = useCallback((row: number, col: string, initialValue: string = '') => {
+    setEditingCell({ row, col, value: initialValue });
   }, []);
 
   const handleCellEditChange = useCallback((value: string) => {
@@ -85,7 +85,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
     
     setRows(prevRows => {
       const newRows = [...prevRows, newRow];
-      onDataChange(newRows);
+        onDataChange(newRows);
       return newRows;
     });
   }, [headers, onDataChange]);
@@ -280,10 +280,10 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                       )}
                     </td>
                   ))}
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 font-medium whitespace-nowrap">
                     <button
                       onClick={() => handleRemoveRow(rowIndex)}
-                      className="text-red-600 hover:text-red-800"
+                      className="mt-1 text-xs text-red-600 hover:text-red-800"
                     >
                       {t('removeRow')}
                     </button>
@@ -298,7 +298,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
               </tr>
             )}
           </tbody>
-          <tfoot className="bg-gray-50 border-t border-gray-200">
+          <tfoot className="px-6 py-3 text-left text-xs font-medium bg-gray-50 text-gray-500 uppercase tracking-wider border-t border-gray-200">
             <tr>
               <td colSpan={headers.length + 1} className="px-6 py-4">
                 <button
