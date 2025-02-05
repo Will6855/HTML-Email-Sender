@@ -15,10 +15,14 @@ export const en = {
   smtpServer: 'SMTP Server',
   smtpPort: 'SMTP Port',
   save: 'Save',
+  saveChanges: 'Save Changes',
   cancel: 'Cancel',
   accountManagement: 'Account Management',
   fillAllFields: 'Please fill in all fields',
   noAccounts: 'No accounts added yet',
+  selectAccountError: 'Please select an account',
+  edit: 'Edit',
+  errorEditingAccount: 'Failed to edit account. Please try again.',
 
   // Email Form
   senderName: 'Sender Name',

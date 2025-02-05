@@ -15,10 +15,14 @@ export const fr = {
   smtpServer: 'Serveur SMTP',
   smtpPort: 'Port SMTP',
   save: 'Enregistrer',
+  saveChanges: 'Sauvegarder les modifications',
   cancel: 'Annuler',
   accountManagement: 'Gestion des comptes',
   fillAllFields: 'Veuillez remplir tous les champs',
+  selectAccountError: 'Veuillez choisir un compte',
   noAccounts: 'Aucun compte ajouté',
+  edit: 'Modifier',
+  errorEditingAccount: 'Échec de la modification du compte. Veuillez réessayer.',
 
   // Email Form
   senderName: 'Nom de l\'expéditeur',

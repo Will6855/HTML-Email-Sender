@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { prisma } from '@/lib/prisma';
+import { decryptPassword } from '@/app/api/emailAccounts/route';
 
 export async function POST(request: Request) {
   // Check if user is authenticated
@@ -11,10 +13,20 @@ export async function POST(request: Request) {
   }
 
   const formData = await request.formData();
-  const smtpServer = formData.get('smtpServer') as string;
-  const port = formData.get('port') as string;
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
+  const accountId = formData.get('accountId') as string;
+
+  const account = await prisma.emailAccount.findUnique({
+    where: { id: accountId },
+  });
+
+  if (!account) {
+    return NextResponse.json({ error: 'Account not found' }, { status: 404 });
+  }
+
+  const smtpServer = account.smtpServer;
+  const port = account.smtpPort.toString();
+  const email = account.email;
+  const password = await decryptPassword(account.password);
   const to = formData.get('to') as string;
   const subject = formData.get('subject') as string;
   const htmlContent = formData.get('htmlContent') as string;

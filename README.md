@@ -7,7 +7,7 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
 [![Next.js](https://img.shields.io/badge/Next.js-15.1.6-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6.3-blue)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.15-38B2AC)](https://tailwindcss.com)
-[![Node.js](https://img.shields.io/badge/Node.js-18.x-43853D)](https://nodejs.org)
+[![Node.js](https://img.shields.io/badge/Node.js-20.10.0-43853D)](https://nodejs.org)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 > ⚠️ **Security Note**: This application is designed for local use or deployment in controlled environments. Public deployment is not recommended due to the sensitive nature of email sending capabilities.
@@ -23,7 +23,6 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
 - 📝 **Visual Email Builder** with drag-and-drop interface powered by GrapeJS
 - 📊 **Contact Management** with import/export capabilities
 - 💾 **Template System** for reusable email designs
-- 🔒 **Local Storage** for enhanced security
 - 🎨 **Modern UI/UX** with responsive design
 - 🔧 **Multi-Account Support** for different SMTP configurations
 
@@ -133,6 +132,43 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
    - Verify image URLs are accessible
    - Try using a different browser
    - Check console for any JavaScript errors
+
+## 🚨 Known Issues
+
+### 🔍 Functional Limitations
+
+| Issue | Description | Impact |
+|-------|-------------|--------|
+| **Account Selection** | Default account requires manual re-selection | ⚠️ Minor Inconvenience |
+| **Image Handling** | Only image URLs are supported | 🚫 Template Rendering Limitation |
+| **Translation System** | Incomplete translation file implementation | 🟢 No Functional Impact |
+| **CSV Table Editor** | Errors when editing contact lists | 🟢 No Functional Impact |
+
+### 💡 Detailed Explanations
+
+#### Account Selection
+- Even though an account is selected by default, you need to manually select it again
+- This is a UI quirk that doesn't affect the core functionality
+
+#### Image Rendering
+- 🖼️ **Supported**: Image URLs from the internet
+- 🚫 **Not Supported**: Local file uploads
+- If you select a local file for an image in the email template, it will break the email rendering
+
+#### Translation System
+- Current translation files lack a robust implementation
+- Translations are present but may not be fully optimized
+- Does not interfere with the application's core features
+
+#### CSV Table Editor
+- Occasional errors occur when editing contact lists
+- The issue is being investigated
+- Existing contact data remains unaffected
+
+### 🛠️ Workarounds and Future Improvements
+- For image insertion, use publicly accessible image URLs
+- Manually re-select your email account if needed
+- Report any persistent issues on our GitHub repository
 
 ## 🤝 Contributing
 

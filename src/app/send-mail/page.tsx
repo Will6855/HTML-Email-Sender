@@ -12,8 +12,10 @@ import GrapeJSEditor, { GrapeJSEditorRef } from '../components/GrapeJSEditor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface Account {
+  id?: string;
   email: string;
-  password: string;
+  password?: string;
+  encryptedPassword: string;
   name: string;
   smtpServer: string;
   smtpPort: number;
@@ -142,42 +144,43 @@ const Home = () => {
   };
 
   const handleSendEmails = async () => {
-    if (!emailColumn) {
-      setNotification({ type: 'error', message: t('selectEmailColumn') });
+    if (!form.selectedAccount) {
+      setNotification({ type: 'error', message: t('selectAccountError') });
       setShowNotificationModal(true);
       return;
     }
 
-    if (!form.selectedAccount) {
-      setNotification({ type: 'error', message: t('selectAccount') });
+    if (!csvData || csvData.length === 0) {
+      setNotification({ type: 'error', message: t('noCsvDataError') });
       setShowNotificationModal(true);
       return;
     }
 
     setIsLoading(true);
-    setNotification(null);
     let successCount = 0;
     let errorCount = 0;
 
-    for (const row of csvData) {
-      const email = row[emailColumn];
-      if (!email) continue;
+    const emailColumn = headers.find(header => header.toLowerCase().includes('email')) || 'email';
 
-      let htmlContent = form.htmlContent;
-      Object.keys(row).forEach((key) => {
-        htmlContent = htmlContent.replace(new RegExp(`{{${key}}}`, 'g'), row[key]);
-      });
+    for (const recipient of csvData) {
+      const recipientEmail = recipient[emailColumn];
+      if (!recipientEmail) {
+        errorCount++;
+        continue;
+      }
 
       const formData = new FormData();
-      formData.append('email', form.selectedAccount.email);
-      formData.append('password', form.selectedAccount.password);
-      formData.append('smtpServer', form.selectedAccount.smtpServer);
-      formData.append('smtpPort', form.selectedAccount.smtpPort.toString());
-      formData.append('senderName', form.senderName);
-      formData.append('to', email);
+      if (!form.selectedAccount.id) {
+        throw new Error('Selected email account is missing an ID');
+      }
+      formData.append('accountId', form.selectedAccount.id); 
+      formData.append('to', recipientEmail);
       formData.append('subject', form.subject);
-      formData.append('htmlContent', htmlContent);
-      form.attachments.forEach((file) => {
+      formData.append('htmlContent', form.htmlContent);
+      formData.append('senderName', form.senderName);
+
+      // Append attachments
+      form.attachments.forEach(file => {
         formData.append('attachments', file);
       });
 
@@ -187,14 +190,16 @@ const Home = () => {
           body: formData,
         });
 
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.error || 'Failed to send email');
+        if (response.ok) {
+          successCount++;
+        } else {
+          errorCount++;
+          const errorData = await response.json();
+          console.error(`Error sending email to ${recipientEmail}:`, errorData);
         }
-        successCount++;
       } catch (error) {
         errorCount++;
-        console.error(`Error sending email to ${email}:`, error);
+        console.error(`Error sending email to ${recipientEmail}:`, error);
       }
     }
 

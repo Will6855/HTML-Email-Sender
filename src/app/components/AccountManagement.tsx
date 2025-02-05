@@ -7,7 +7,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 interface Account {
   id?: string;
   email: string;
-  password: string;
+  password?: string;
+  encryptedPassword: string;
   name: string;
   smtpServer: string;
   smtpPort: number;
@@ -34,6 +35,8 @@ const AccountManagement = ({
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingAccount, setEditingAccount] = useState<Account | null>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -62,22 +65,59 @@ const AccountManagement = ({
 
   const handleAddAccount = async (newAccount: Account) => {
     try {
-      const createdAccount = await fetch('/api/emailAccounts', {
+      const response = await fetch('/api/emailAccounts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newAccount),
       });
 
-      const updatedAccounts = [...accounts, newAccount];
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to add account');
+      }
+
+      const createdAccount = await response.json();
+
+      const updatedAccounts = [...accounts, createdAccount];
 
       setAccounts(updatedAccounts);
+      onAccountsChange?.(updatedAccounts);
+      
       if (updatedAccounts.length === 1) {
-        setSelectedAccount(newAccount);
+        setSelectedAccount(createdAccount);
+        onSelectAccount?.(createdAccount);
       }
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error adding account:', error);
-      alert(t('errorAddingAccount'));
+      alert(error instanceof Error ? error.message : t('errorAddingAccount'));
+    }
+  };
+
+  const handleEditAccount = async (updatedAccount: Account) => {
+    try {
+      const response = await fetch('/api/emailAccounts', {
+        method: 'PUT',  // Use PUT for updating
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedAccount),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update account');
+      }
+
+      const updatedAccounts = accounts.map(account => 
+        account.email === updatedAccount.email ? updatedAccount : account
+      );
+
+      setAccounts(updatedAccounts);
+      setSelectedAccount(updatedAccount);
+      setIsModalOpen(false);
+      setIsEditMode(false);
+      setEditingAccount(null);
+    } catch (error) {
+      console.error('Error editing account:', error);
+      alert(t('errorEditingAccount'));
     }
   };
 
@@ -86,7 +126,7 @@ const AccountManagement = ({
       const accountToRemove = accounts.find(account => account.email === email);
       
       if (accountToRemove?.id) {
-        await fetch(`/api/emailAccounts/${accountToRemove.id}`, {
+        await fetch(`/api/emailAccounts?id=${accountToRemove.id}`, {
           method: 'DELETE',
         });
       }
@@ -130,8 +170,14 @@ const AccountManagement = ({
 
       <AccountModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSave={handleAddAccount}
+        onClose={() => {
+          setIsModalOpen(false);
+          setIsEditMode(false);
+          setEditingAccount(null);
+        }}
+        onSave={isEditMode ? handleEditAccount : handleAddAccount}
+        initialAccount={editingAccount || undefined}
+        mode={isEditMode ? 'edit' : 'add'}
       />
 
       <div className="space-y-4">
@@ -162,15 +208,28 @@ const AccountManagement = ({
                 <p className="text-xs text-gray-400">SMTP: {account.smtpServer}:{account.smtpPort}</p>
               </div>
             </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleRemoveAccount(account.email);
-              }}
-              className="text-red-600 hover:text-red-800"
-            >
-              {t('remove')}
-            </button>
+            <div className="flex flex-col space-y-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEditingAccount(account);
+                  setIsModalOpen(true);
+                  setIsEditMode(true);
+                }}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                {t('edit')}
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveAccount(account.email);
+                }}
+                className="text-red-600 hover:text-red-800"
+              >
+                {t('remove')}
+              </button>
+            </div>
           </div>
         ))}
         {accounts.length === 0 && (
