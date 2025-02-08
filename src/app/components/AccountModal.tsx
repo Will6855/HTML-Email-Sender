@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useTranslation } from '@/hooks/useTranslation';
-import { encryptPassword, decryptPassword } from '../api/emailAccounts/route';
 
 interface Account {
   email: string;
-  password?: string;
-  encryptedPassword: string;
+  password: string;
   name: string;
   smtpServer: string;
   smtpPort: number;
@@ -32,7 +30,6 @@ const AccountModal = ({
   const [newAccount, setNewAccount] = useState<Account>(initialAccount || {
     email: '',
     password: '',
-    encryptedPassword: '',
     name: '',
     smtpServer: '',
     smtpPort: 587,
@@ -47,7 +44,7 @@ const AccountModal = ({
       const initializeAccount = async () => {
         const accountToSet = initialAccount || {
           email: '',
-          encryptedPassword: '',
+          password: '',
           name: '',
           smtpServer: '',
           smtpPort: 587,
@@ -55,10 +52,7 @@ const AccountModal = ({
 
         if (mode === 'edit' && accountToSet.password) {
           try {
-            const decryptedPassword = await decryptPassword(accountToSet.password);
-            console.log('Account password:', accountToSet.password);
-            console.log('Decrypted password:', decryptedPassword);
-            setPassword(decryptedPassword);
+            setPassword(accountToSet.password);
           } catch (error) {
             console.error('Failed to decrypt password:', error);
           }
@@ -85,7 +79,7 @@ const AccountModal = ({
     }
 
     if (mode === 'add' && (!password || password.length < 6)) {
-      newErrors.encryptedPassword = mode === 'add' 
+      newErrors.password = mode === 'add' 
         ? t('passwordRequired') 
         : t('passwordTooShort');
     }
@@ -110,10 +104,9 @@ const AccountModal = ({
 
   const handleSubmit = async () => {
     if (validateForm()) {
-      const encryptedPassword = await encryptPassword(password);
       const accountToSave = {
         ...newAccount,
-        password: encryptedPassword,
+        password: password,
       };
 
       onSave(accountToSave);
@@ -121,7 +114,6 @@ const AccountModal = ({
       setNewAccount({
         email: '',
         password: '',
-        encryptedPassword: '',
         name: '',
         smtpServer: '',
         smtpPort: 587,
@@ -195,7 +187,7 @@ const AccountModal = ({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-                  errors.encryptedPassword ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
+                  errors.password ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
                 }`}
               />
               <button
@@ -206,7 +198,7 @@ const AccountModal = ({
                 {showPassword ? <FiEyeOff className="h-5 w-5 text-gray-400" /> : <FiEye className="h-5 w-5 text-gray-400" />}
               </button>
             </div>
-            {errors.encryptedPassword && <p className="text-red-500 text-xs mt-1">{errors.encryptedPassword}</p>}
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
           </div>
 
           <div>

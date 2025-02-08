@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   const smtpServer = account.smtpServer;
   const port = account.smtpPort.toString();
   const email = account.email;
-  const password = await decryptPassword(account.password);
+  const password = decryptPassword(account.password);
   const to = formData.get('to') as string;
   const subject = formData.get('subject') as string;
   const htmlContent = formData.get('htmlContent') as string;

@@ -14,8 +14,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 interface Account {
   id?: string;
   email: string;
-  password?: string;
-  encryptedPassword: string;
+  password: string;
   name: string;
   smtpServer: string;
   smtpPort: number;
@@ -156,11 +155,14 @@ const Home = () => {
       return;
     }
 
+    if (!emailColumn) {
+      alert('Please select an email column.');
+      return;
+    }
+
     setIsLoading(true);
     let successCount = 0;
     let errorCount = 0;
-
-    const emailColumn = headers.find(header => header.toLowerCase().includes('email')) || 'email';
 
     for (const recipient of csvData) {
       const recipientEmail = recipient[emailColumn];
@@ -176,7 +178,13 @@ const Home = () => {
       formData.append('accountId', form.selectedAccount.id); 
       formData.append('to', recipientEmail);
       formData.append('subject', form.subject);
-      formData.append('htmlContent', form.htmlContent);
+      
+      let htmlContent = form.htmlContent;
+      Object.keys(recipient).forEach((key) => {
+        htmlContent = htmlContent.replace(new RegExp(`{{${key}}}`, 'g'), recipient[key]);
+      });
+      
+      formData.append('htmlContent', htmlContent);
       formData.append('senderName', form.senderName);
 
       // Append attachments

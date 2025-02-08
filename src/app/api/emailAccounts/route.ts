@@ -4,9 +4,9 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import crypto from 'crypto';
 
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
+const ENCRYPTION_KEY = process.env. ENCRYPTION_KEY;
 
-export function encryptPassword(password: string): string {
+function encryptPassword(password: string): string {
   try {
     const key = crypto.createHash('sha256').update(String(ENCRYPTION_KEY)).digest();
     const iv = crypto.randomBytes(16);
@@ -71,6 +71,10 @@ export async function GET(request: NextRequest) {
       where: { generalAccountId: userId }
     });
 
+    userAccounts.forEach(account => {
+      account.password = decryptPassword(account.password);
+    });
+
     return NextResponse.json(userAccounts);
   } catch (error) {
     console.error('Error fetching accounts:', error);
@@ -97,7 +101,7 @@ export async function POST(request: NextRequest) {
     const newAccount = await prisma.emailAccount.create({
       data: {
         email,
-        password: password,
+        password: encryptPassword(password),
         name,
         smtpServer,
         smtpPort,
@@ -139,7 +143,7 @@ export async function PUT(request: NextRequest) {
         smtpServer,
         smtpPort,
         // Only update password if a new one is provided
-        ...(password && { password: password }),
+        ...(password && { password: encryptPassword(password) }),
       }
     });
 

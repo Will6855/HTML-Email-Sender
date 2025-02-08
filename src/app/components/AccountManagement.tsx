@@ -7,8 +7,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 interface Account {
   id?: string;
   email: string;
-  password?: string;
-  encryptedPassword: string;
+  password: string;
   name: string;
   smtpServer: string;
   smtpPort: number;
@@ -51,7 +50,9 @@ const AccountManagement = ({
         setAccounts(fetchedAccounts);
         
         if (fetchedAccounts.length > 0) {
-          setSelectedAccount(fetchedAccounts[0]);
+          const firstAccount = fetchedAccounts[0];
+          setSelectedAccount(firstAccount);
+          onSelectAccount?.(firstAccount);
         }
       } catch (error) {
         console.error('Error loading accounts:', error);
