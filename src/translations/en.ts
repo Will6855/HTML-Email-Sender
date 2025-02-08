@@ -16,7 +16,6 @@ export const en = {
   password: 'Password',
   smtpServer: 'SMTP Server',
   smtpPort: 'SMTP Port',
-  save: 'Save',
   saveChanges: 'Save Changes',
   cancel: 'Cancel',
   confirm: 'Confirm',
@@ -27,13 +26,14 @@ export const en = {
   edit: 'Edit',
   errorEditingAccount: 'Failed to edit account. Please try again.',
   confirmRemoveAccount: 'Are you sure you want to remove the account with the email: ',
+  passwordResetLinkGenerationError: 'Failed to generate reset link. Please try again.',
+  noUsersSelected: 'Please select a user',
+  resetLinkCopied: 'Reset link copied to clipboard',
 
   // Email Form
   senderName: 'Sender Name',
   to: 'To',
   subject: 'Subject',
-  attachments: 'Attachments',
-  dropFiles: 'Drag and drop files here, or click to select files',
   send: 'Send',
   template: 'Template',
   loadTemplate: 'Load Template',
@@ -44,6 +44,7 @@ export const en = {
   importCsv: 'Import CSV',
   exportCsv: 'Export CSV',
   emailColumnLabel: 'Email column:',
+  selectEmailColumnError: 'Please select an email column',
   addColumn: 'Add Column',
   removeColumn: 'Remove',
   addRow: 'Add Row',
@@ -94,6 +95,7 @@ export const en = {
   failedToSendEmail: 'Failed to send email',
   errorSavingTemplate: 'Error saving template:',
   personalizationTip: 'Tip: Use {{columnName}} to insert personalized data from your CSV file.',
+  emailSendSummary: '{0} emails sent successfully, {1} failed.',
 
   // Notifications
   success: 'Success',
@@ -132,23 +134,28 @@ export const en = {
   step3Title: '3. Create & Send',
   step3Description: 'Compose your HTML email, add attachments if needed, and send to your contact list.',
 
-  loginTitle: 'Login',
+  loginTitle: 'Log In',
   username: 'Username',
-  password: 'Password',
   signIn: 'Log In',
   forgotPassword: 'Forgot Password?',
   noAccount: 'No account?',
   signUp: 'Sign Up',
+  usernameRequired: 'Username is required',
+  passwordRequired: 'Password is required',
+  invalidUsernameOrPassword: 'Invalid username or password',
 
   registerTitle: 'Sign Up',
   firstName: 'First Name',
   lastName: 'Last Name',
-  email: 'Email',
-  password: 'Password',
   confirmPassword: 'Confirm Password',
   submit: 'Create Account',
   alreadyHaveAccount: 'Already have an account?',
-  signIn: 'Log In',
+  usernamePlaceholder: 'Enter your username',
+  emailPlaceholder: 'Enter your email',
+  passwordPlaceholder: 'Enter your password',
+  confirmPasswordPlaceholder: 'Confirm your password',
+  registerSuccess: 'Account created successfully! Please check your email for verification.',
+  registering: 'Registering...',
 
 
   login: 'Login',
@@ -158,22 +165,15 @@ export const en = {
 
   // Profile Page
   userInformation: 'User Information',
-  username: 'Username',
-  email: 'Email',
   role: 'Role',
   emailAccounts: 'Email Accounts',
   addEmailAccount: 'Add Email Account',
   noEmailAccountsFound: 'No email accounts found',
-  name: 'Name',
-  edit: 'Edit',
-  delete: 'Delete',
-  accountManagement: 'Account Management',
   changePassword: 'Change Password',
   adminDashboard: 'Admin Dashboard',
 
   // Change Email Page
   changeEmail: 'Change Email',
-  newEmail: 'New Email',
   emailChangedSuccessfully: 'Email changed successfully',
   enterNewEmail: 'Enter new email address',
   currentPassword: 'Current Password',
@@ -182,14 +182,17 @@ export const en = {
 
   // Change Password Page
   passwordsDoNotMatch: 'Passwords do not match',
+  passwordResetSuccess: 'Password reset successfully',
+  passwordResetError: 'Password reset failed',
+  invalidResetLink: 'Invalid reset link',
+  resetPassword: 'Reset Password',
+  resettingPassword: 'Resetting Password...',
   passwordChangedSuccessfully: 'Password changed successfully',
   newPassword: 'New Password',
   enterNewPassword: 'Enter new password',
-  confirmPassword: 'Confirm Password',
   confirmNewPassword: 'Confirm new password',
 
   // Admin Dashboard Page
-  adminDashboard: 'Admin Dashboard',
   generateResetLink: 'Generate Reset Link',
   selectUserForPasswordReset: 'Select User for Password Reset',
   selectAUser: 'Select a user',

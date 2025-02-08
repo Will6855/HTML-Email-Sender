@@ -1,9 +1,9 @@
 'use client';
 
-import './globals.css';
+import '@/app/globals.css';
 import { Inter } from 'next/font/google';
-import Header from './components/Header';
-import { LanguageProvider } from '../context/LanguageContext';
+import Header from '@/app/components/Header';
+import { LanguageProvider } from '@/context/LanguageContext';
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from 'react-hot-toast';
 
@@ -27,6 +27,7 @@ export default function RootLayout({
             <main className="min-h-screen bg-gray-100">
               {children}
             </main>
+            <Toaster />
           </LanguageProvider>
         </SessionProvider>
       </body>

@@ -34,7 +34,7 @@ export default function ChangeEmailPage() {
       setSuccess(t('emailChangedSuccessfully'));
       setTimeout(() => router.push('/profile'), 2000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(t('unexpectedError'));
     }
   };
 

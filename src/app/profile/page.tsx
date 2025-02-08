@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { redirect } from "next/navigation";
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
 import { signOut } from 'next-auth/react';
@@ -14,7 +15,12 @@ interface EmailAccount {
 }
 
 export default function ProfilePage() {
-  const { data: session, status } = useSession();
+  const { status, data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/login");
+    }
+  });
   const router = useRouter();
   const { t } = useTranslation();
   const [emailAccounts, setEmailAccounts] = useState<EmailAccount[]>([]);
@@ -22,11 +28,6 @@ export default function ProfilePage() {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
-    // Redirect if not authenticated
-    if (status === 'unauthenticated') {
-      router.push('/login');
-    }
-
     // Fetch email accounts
     const fetchEmailAccounts = async () => {
       if (session?.user?.id) {

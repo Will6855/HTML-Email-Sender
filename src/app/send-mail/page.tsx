@@ -3,12 +3,12 @@
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useState, ChangeEvent, useEffect, useRef, useCallback } from 'react';
-import AccountManagement from '../components/AccountManagement';
-import CSVTableEditor from '../components/CSVTableEditor';
-import TemplateModal from '../components/TemplateModal';
-import NotificationModal from '../components/NotificationModal';
-import FileDropZone from '../components/FileDropZone';
-import GrapeJSEditor, { GrapeJSEditorRef } from '../components/GrapeJSEditor';
+import AccountManagement from '@/app/components/AccountManagement';
+import CSVTableEditor from '@/app/components/CSVTableEditor';
+import TemplateModal from '@/app/components/TemplateModal';
+import NotificationModal from '@/app/components/NotificationModal';
+import FileDropZone from '@/app/components/FileDropZone';
+import GrapeJSEditor, { GrapeJSEditorRef } from '@/app/components/GrapeJSEditor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface Account {
@@ -156,7 +156,7 @@ const Home = () => {
     }
 
     if (!emailColumn) {
-      alert('Please select an email column.');
+      alert(t('selectEmailColumnError'));
       return;
     }
 
@@ -215,7 +215,7 @@ const Home = () => {
     if (errorCount === 0) {
       setNotification({ type: 'success', message: t('emailSendSuccess') });
     } else {
-      setNotification({ type: 'error', message: `${successCount} emails sent successfully, ${errorCount} failed.` });
+      setNotification({ type: 'error', message: t('emailSendSummary', [successCount.toString(), errorCount.toString()]) });
     }
     setShowNotificationModal(true);
   };

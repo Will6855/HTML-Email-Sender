@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslation } from '../hooks/useTranslation';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Home = () => {
   const { t } = useTranslation();

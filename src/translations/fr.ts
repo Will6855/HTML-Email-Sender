@@ -16,24 +16,24 @@ export const fr = {
   password: 'Mot de passe',
   smtpServer: 'Serveur SMTP',
   smtpPort: 'Port SMTP',
-  save: 'Enregistrer',
   saveChanges: 'Sauvegarder les modifications',
   cancel: 'Annuler',
   confirm: 'Confirmer',
   accountManagement: 'Gestion des comptes',
   fillAllFields: 'Veuillez remplir tous les champs',
-  selectAccountError: 'Veuillez choisir un compte',
   noAccounts: 'Aucun compte ajouté',
+  selectAccountError: 'Veuillez choisir un compte',
   edit: 'Modifier',
   errorEditingAccount: 'Échec de la modification du compte. Veuillez réessayer.',
   confirmRemoveAccount: 'Êtes-vous sûr(e) de vouloir supprimer le compte avec l\'email :',
+  passwordResetLinkGenerationError: 'Échec de la génération du lien de réinitialisation. Veuillez réessayer.',
+  noUsersSelected: 'Veuillez sélectionner un utilisateur',
+  resetLinkCopied: 'Lien de réinitialisation copié dans le presse-papiers',
 
   // Email Form
   senderName: 'Nom de l\'expéditeur',
   to: 'À',
   subject: 'Sujet',
-  attachments: 'Pièces jointes',
-  dropFiles: 'Glissez et déposez les fichiers ici ou cliquez pour sélectionner',
   send: 'Envoyer',
   template: 'Modèle',
   loadTemplate: 'Charger le modèle',
@@ -44,6 +44,7 @@ export const fr = {
   importCsv: 'Importer CSV',
   exportCsv: 'Exporter CSV',
   emailColumnLabel: 'Colonne email :',
+  selectEmailColumnError: 'Veuillez sélectionner une colonne email',
   addColumn: 'Ajouter une colonne',
   removeColumn: 'Supprimer',
   addRow: 'Ajouter une ligne',
@@ -94,11 +95,12 @@ export const fr = {
   failedToSendEmail: 'Échec de l\'envoi de l\'email',
   errorSavingTemplate: 'Erreur lors de la sauvegarde du modèle :',
   personalizationTip: 'Astuce : Utilisez {{nomColonne}} pour insérer des données personnalisées de votre fichier CSV.',
+  emailSendSummary: '{0} emails envoyés avec succès, {1} échoués.',
 
   // Notifications
   success: 'Succès',
   error: 'Erreur',
-
+  
   // Language Switch
   switchLanguage: 'Passer en {0}',
   french: 'Français',
@@ -132,48 +134,46 @@ export const fr = {
   step3Title: '3. Créer et envoyer',
   step3Description: 'Composez votre email HTML, ajoutez des pièces jointes si nécessaire, et envoyez à votre liste de contacts.',
 
+  // Login & Registration
   loginTitle: 'Connexion',
   username: 'Nom d\'utilisateur',
-  password: 'Mot de passe',
   signIn: 'Se connecter',
   forgotPassword: 'Mot de passe oublié ?',
   noAccount: 'Pas de compte ?',
   signUp: 'S\'inscrire',
+  usernameRequired: 'Le nom d\'utilisateur est requis',
+  passwordRequired: 'Le mot de passe est requis',
+  invalidUsernameOrPassword: 'Nom d\'utilisateur ou mot de passe invalide',
 
   registerTitle: 'Inscription',
   firstName: 'Prénom',
   lastName: 'Nom',
-  email: 'Email',
-  password: 'Mot de passe',
   confirmPassword: 'Confirmer le mot de passe',
   submit: 'Créer un compte',
-  alreadyHaveAccount: 'Vous avez deja un compte ?',
-  signIn: 'Se connecter',
-
+  alreadyHaveAccount: 'Vous avez déjà un compte ?',
+  usernamePlaceholder: 'Entrez votre nom d\'utilisateur',
+  emailPlaceholder: 'Entrez votre email',
+  passwordPlaceholder: 'Entrez votre mot de passe',
+  confirmPasswordPlaceholder: 'Confirmez votre mot de passe',
+  registerSuccess: 'Compte créé avec succès ! Veuillez vérifier votre email pour la confirmation.',
+  registering: 'Inscription en cours...',
 
   login: 'Connexion',
   register: 'Inscription',
   logout: 'Déconnexion',
   welcome: 'Bienvenue, ',
-    
+
   // Profile Page
   userInformation: 'Informations utilisateur',
-  username: 'Nom d\'utilisateur',
-  email: 'Email',
   role: 'Rôle',
   emailAccounts: 'Comptes Email',
   addEmailAccount: 'Ajouter un compte Email',
   noEmailAccountsFound: 'Aucun compte email trouvé',
-  name: 'Nom',
-  edit: 'Modifier',
-  delete: 'Supprimer',
-  accountManagement: 'Gestion du compte',
   changePassword: 'Changer le mot de passe',
   adminDashboard: 'Tableau de bord Admin',
 
   // Change Email Page
   changeEmail: 'Changer l\'email',
-  newEmail: 'Nouvel email',
   emailChangedSuccessfully: 'Email changé avec succès',
   enterNewEmail: 'Entrez votre nouvelle adresse email',
   currentPassword: 'Mot de passe actuel',
@@ -182,14 +182,17 @@ export const fr = {
 
   // Change Password Page
   passwordsDoNotMatch: 'Les mots de passe ne correspondent pas',
+  passwordResetSuccess: 'Mot de passe réinitialisé avec succès',
+  passwordResetError: 'Échec de la réinitialisation du mot de passe',
+  invalidResetLink: 'Lien de réinitialisation invalide',
+  resetPassword: 'Réinitialiser le mot de passe',
+  resettingPassword: 'Réinitialisation du mot de passe...',
   passwordChangedSuccessfully: 'Mot de passe changé avec succès',
   newPassword: 'Nouveau mot de passe',
   enterNewPassword: 'Entrez le nouveau mot de passe',
-  confirmPassword: 'Confirmer le mot de passe',
   confirmNewPassword: 'Confirmez le nouveau mot de passe',
 
   // Admin Dashboard Page
-  adminDashboard: 'Tableau de bord Admin',
   generateResetLink: 'Générer un lien de réinitialisation',
   selectUserForPasswordReset: 'Sélectionner un utilisateur pour la réinitialisation du mot de passe',
   selectAUser: 'Sélectionner un utilisateur',

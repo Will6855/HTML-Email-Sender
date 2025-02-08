@@ -1,4 +1,3 @@
-// src/app/login/page.tsx
 "use client";
 
 import { signIn } from "next-auth/react";
@@ -8,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useTranslation } from '@/hooks/useTranslation';
-import { LanguageProvider } from '../../context/LanguageContext';
+import { LanguageProvider } from '@/context/LanguageContext';
 
 export default function Login() {
   const { t } = useTranslation();
@@ -16,8 +15,8 @@ export default function Login() {
   const router = useRouter();
 
   const loginSchema = z.object({
-    username: z.string().min(1, "Username is required"),
-    password: z.string().min(1, "Password is required")
+    username: z.string().min(1, t('usernameRequired')),
+    password: z.string().min(1, t('passwordRequired'))
   });
 
   const { 
@@ -39,14 +38,14 @@ export default function Login() {
       });
 
       if (result?.error) {
-        setError("Invalid username or password");
+        setError(t('invalidUsernameOrPassword'));
         return;
       }
 
       // Redirect to send-mail page on successful login
       router.push("/send-mail");
     } catch (err) {
-      setError("An unexpected error occurred");
+      setError(t('unexpectedError'));
     }
   };
 
@@ -70,7 +69,7 @@ export default function Login() {
               type="text" 
               id="username"
               className="w-full px-3 py-2 border rounded-md"
-              placeholder="Enter your username"
+              placeholder={t('usernamePlaceholder')}
             />
             {errors.username && (
               <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
@@ -84,7 +83,7 @@ export default function Login() {
               type="password" 
               id="password"
               className="w-full px-3 py-2 border rounded-md"
-              placeholder="Enter your password"
+              placeholder={t('passwordPlaceholder')}
             />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { redirect } from "next/navigation";
+import toast from 'react-hot-toast';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface User {
@@ -11,7 +13,12 @@ interface User {
 }
 
 export default function AdminDashboard() {
-  const { data: session, status } = useSession();
+  const { status, data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/login");
+    }
+  });
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState('');
@@ -21,22 +28,23 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     // Redirect if not admin
-    if (status === 'authenticated' && session?.user?.role !== 'ADMIN') {
-      router.push('/');
+    if (session?.user?.role !== 'ADMIN') {
+      redirect('/');
     }
-
+    
     // Fetch users if admin
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('/api/users');
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+        setError(t('unexpectedError'));
+      }
+    };
+
     if (session?.user?.role === 'ADMIN') {
-      const fetchUsers = async () => {
-        try {
-          const response = await fetch('/api/users');
-          const data = await response.json();
-          setUsers(data);
-        } catch (error) {
-          console.error('Failed to fetch users:', error);
-          setError('Failed to load users');
-        }
-      };
       fetchUsers();
     }
   }, [session, status, router]);
@@ -47,7 +55,7 @@ export default function AdminDashboard() {
     setResetLink('');
 
     if (!selectedUser) {
-      setError('Please select a user');
+      setError(t('noUserSelected'));
       return;
     }
 
@@ -65,18 +73,18 @@ export default function AdminDashboard() {
         const fullResetLink = `${window.location.origin}${data.resetLink}`;
         setResetLink(fullResetLink);
       } else {
-        setError(data.error || 'Failed to generate reset link');
+        setError(t('passwordResetLinkGenerationError'));
       }
     } catch (error) {
       console.error('Password reset link generation error:', error);
-      setError('An unexpected error occurred');
+      setError(t('unexpectedError'));
     }
   };
 
   const copyResetLink = () => {
     if (resetLink) {
       navigator.clipboard.writeText(resetLink);
-      alert('Reset link copied to clipboard');
+      toast.success(t('resetLinkCopied'));
     }
   };
 
@@ -91,9 +99,6 @@ export default function AdminDashboard() {
         </div>
       </div>
     )
-  }
-  if (status === 'unauthenticated' || session?.user?.role !== 'ADMIN') {
-    return <div>Access Denied</div>;
   }
 
   return (

@@ -1,14 +1,14 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { translations } from '../translations';
+import { translations } from '@/translations';
 
 type Language = 'en' | 'fr';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: string[]) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -53,8 +53,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(LANGUAGE_KEY, lang);
   };
 
-  const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations['en']] || key;
+  const t = (key: string, params?: string[]): string => {
+    let translation = translations[language][key] || key;
+    
+    // Replace placeholders if params are provided
+    if (params) {
+      params.forEach((param, index) => {
+        translation = translation.replace(`{${index}}`, param);
+      });
+    }
+    
+    return translation;
   };
 
   return (

@@ -1,13 +1,14 @@
-// src/app/reset-password/page.tsx
 'use client';
 
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ResetPassword() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const resetToken = searchParams.get('token');
+  const { t } = useTranslation();
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -20,7 +21,7 @@ export default function ResetPassword() {
     setIsLoading(true);
     
     if (newPassword !== confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('passwordsDoNotMatch'));
       setIsLoading(false);
       return;
     }
@@ -35,21 +36,21 @@ export default function ResetPassword() {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Password reset successfully');
+        alert(t('passwordResetSuccess'));
         router.push('/login');
       } else {
-        setError(data.error || 'Password reset failed');
+        setError(t('passwordResetError'));
       }
     } catch (error) {
       console.error('Password reset error:', error);
-      setError('An unexpected error occurred');
+      setError(t('unexpectedError'));
     } finally {
       setIsLoading(false);
     }
   };
 
   if (!resetToken) {
-    return <div className="container mx-auto p-4">Invalid reset link</div>;
+    return <div className="container mx-auto p-4">{t('invalidResetLink')}</div>;
   }
 
   return (
@@ -57,13 +58,13 @@ export default function ResetPassword() {
       <div className="w-full max-w-md">
         <div className="bg-white shadow-lg rounded-2xl p-8 space-y-6">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Reset Password</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('resetPassword')}</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                New Password
+                {t('newPassword')}
               </label>
               <input 
                 type="password"
@@ -76,7 +77,7 @@ export default function ResetPassword() {
             </div>
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                Confirm New Password
+                {t('confirmPassword')}
               </label>
               <input 
                 type="password"
@@ -99,7 +100,7 @@ export default function ResetPassword() {
               disabled={isLoading}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
             >
-              {isLoading ? 'Resetting Password...' : 'Reset Password'}
+              {isLoading ? t('resettingPassword') : t('resetPassword')}
             </button>
           </form>
         </div>
