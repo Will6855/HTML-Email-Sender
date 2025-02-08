@@ -139,16 +139,11 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
 
 | Issue | Description | Impact |
 |-------|-------------|--------|
-| **Account Selection** | Default account requires manual re-selection | ⚠️ Minor Inconvenience |
 | **Image Handling** | Only image URLs are supported | 🚫 Template Rendering Limitation |
 | **Translation System** | Incomplete translation file implementation | 🟢 No Functional Impact |
 | **CSV Table Editor** | Errors when editing contact lists | 🟢 No Functional Impact |
 
 ### 💡 Detailed Explanations
-
-#### Account Selection
-- Even though an account is selected by default, you need to manually select it again
-- This is a UI quirk that doesn't affect the core functionality
 
 #### Image Rendering
 - 🖼️ **Supported**: Image URLs from the internet

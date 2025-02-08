@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslation } from '@/hooks/useTranslation';
+import { signOut } from 'next-auth/react';
 
 interface EmailAccount {
   id: string;
@@ -18,6 +19,7 @@ export default function ProfilePage() {
   const { t } = useTranslation();
   const [emailAccounts, setEmailAccounts] = useState<EmailAccount[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     // Redirect if not authenticated
@@ -46,6 +48,34 @@ export default function ProfilePage() {
       fetchEmailAccounts();
     }
   }, [session, status, router]);
+
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await fetch('/api/user', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        await signOut({ redirect: true, callbackUrl: '/' });
+      } else {
+        const errorData = await response.json();
+        console.error('Account deletion failed:', errorData);
+      }
+    } catch (error) {
+      console.error('Error deleting account:', error);
+    }
+  };
+
+  const confirmDeleteAccount = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const cancelDeleteAccount = () => {
+    setShowDeleteConfirmation(false);
+  };
 
   if (status === 'loading' || isLoading) {
     return (
@@ -158,6 +188,38 @@ export default function ProfilePage() {
               </Link>
             )}
           </div>
+        </div>
+
+        <div className="mt-6">
+          <button 
+            onClick={confirmDeleteAccount}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+          >
+            {t('deleteAccount')}
+          </button>
+
+          {showDeleteConfirmation && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-xl">
+                <h2 className="text-xl font-bold mb-4">{t('confirmDeleteAccount')}</h2>
+                <p className="mb-4">{t('deleteAccountWarning')}</p>
+                <div className="flex justify-between">
+                  <button 
+                    onClick={cancelDeleteAccount}
+                    className="bg-gray-300 text-black px-4 py-2 rounded mr-2"
+                  >
+                    {t('cancel')}
+                  </button>
+                  <button 
+                    onClick={handleDeleteAccount}
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+                  >
+                    {t('confirm')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
