@@ -196,13 +196,13 @@ const AccountManagement = ({
             }}
           >
             <div className="flex items-center space-x-3">
-              <div className={`w-4 h-4 rounded-full border-2 ${
+              <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
                 selectedAccount?.email === account.email 
                 ? 'border-indigo-500 bg-indigo-500' 
                 : 'border-gray-300'
               }`}>
                 {selectedAccount?.email === account.email && (
-                  <div className="w-2 h-2 mx-auto mt-0.5 rounded-full bg-white" />
+                  <div className="w-2 h-2 rounded-full bg-white" />
                 )}
               </div>
               <div>

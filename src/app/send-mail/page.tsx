@@ -8,7 +8,7 @@ import CSVTableEditor from '@/app/components/CSVTableEditor';
 import TemplateModal from '@/app/components/TemplateModal';
 import NotificationModal from '@/app/components/NotificationModal';
 import FileDropZone from '@/app/components/FileDropZone';
-import GrapeJSEditor, { GrapeJSEditorRef } from '@/app/components/GrapeJSEditor';
+import GrapeJSEditor, { GrapeJSEditorRef } from '@/app/components/GrapesJSEditor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface Account {

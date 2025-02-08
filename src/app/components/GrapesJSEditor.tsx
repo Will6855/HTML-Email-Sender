@@ -4,6 +4,79 @@ import { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
 import grapesjs from 'grapesjs';
 import gjsNewsletter from 'grapesjs-preset-newsletter';
 import 'grapesjs/dist/css/grapes.min.css';
+import { useLanguage } from '@/context/LanguageContext';
+
+const fr = require('grapesjs/locale/fr').default;
+const en = require('grapesjs/locale/en').default;
+
+const messages = {
+  fr: { 
+    ...fr,
+    blockManager: {
+      ...fr.blockManager,
+      categories: {
+        ...fr.blockManager.categories,
+        'Basic': 'Éléments de base'
+      }
+    },
+    styleManager: {
+      ...fr.styleManager,
+      properties: {
+        ...fr.styleManager.properties,
+        'min-height': 'Hauteur minimale',
+        'margin-top-sub': 'Haut',
+        'margin-right-sub': 'Droite',
+        'margin-left-sub': 'Gauche',
+        'margin-bottom-sub': 'Bas',
+        'padding-top-sub': 'Haut',
+        'padding-right-sub': 'Droite',
+        'padding-left-sub': 'Gauche',
+        'padding-bottom-sub': 'Bas',
+        'text-decoration': 'Texte',
+        'font-style': 'Style de police',
+        'vertical-align': 'Alignement vertical',
+        'border-collapse': 'Coller les bordures',
+        'border-top-left-radius-sub': 'Supérieur gauche',
+        'border-top-right-radius-sub': 'Supérieur droit',
+        'border-bottom-right-radius-sub': 'Inférieur droit',
+        'border-bottom-left-radius-sub': 'Inférieur gauche',
+        'border-width-sub': 'Largeur',
+        'border-style-sub': 'Style',
+        'border-color-sub': 'Couleur'
+      },
+      options: {
+        'text-align': {
+          left: '<i class="fa fa-align-left"></i>',
+          center: '<i class="fa fa-align-center"></i>',
+          right: '<i class="fa fa-align-right"></i>',
+          justify: '<i class="fa fa-align-justify"></i>'
+        },
+        'vertical-align': {
+          baseline: 'Défaut',
+          top: 'Haut',
+          middle: 'Milieu',
+          bottom: 'Bas'
+        },
+        'border-collapse': {
+          separate: 'Non',
+          collapse: 'Oui'
+        },
+        'border-style-sub': {
+          none: 'Aucun',
+          solid: 'Solide',
+          dashed: 'Désoxydé',
+          dotted: 'Pointé',
+          double: 'Double',
+          groove: 'Cannelure',
+          ridge: 'Arête',
+          inset: 'Enfoncé',
+          outset: 'Saufé'
+        }
+      }
+    }
+  },
+  en: en
+}
 
 interface GrapeJSEditorProps {
   initialContent: string;
@@ -17,6 +90,7 @@ export interface GrapeJSEditorRef {
 
 const GrapeJSEditor = forwardRef<GrapeJSEditorRef, GrapeJSEditorProps>(({ initialContent, onChange }, ref) => {
   const editorRef = useRef<any>(null);
+  const { language } = useLanguage();
 
   useImperativeHandle(ref, () => ({
     loadTemplate: (html: string) => {
@@ -61,7 +135,15 @@ const GrapeJSEditor = forwardRef<GrapeJSEditorRef, GrapeJSEditorProps>(({ initia
   useEffect(() => {
     if (!editorRef.current) {
       try {
+        console.log(language, messages[language]);
         const editor = grapesjs.init({
+          i18n: {
+            locale: language,
+            localeFallback: 'en',
+            messages: {
+              [language]: messages[language] || messages['en']
+            }
+          },
           container: '#gjs',
           height: '500px',
           width: 'auto',
@@ -245,32 +327,29 @@ const GrapeJSEditor = forwardRef<GrapeJSEditorRef, GrapeJSEditorProps>(({ initia
           }
         });
 
-        // Initialize with content
+        // Store editor reference
+        editorRef.current = editor;
+
         editor.on('load', () => {
-          try {
-            if (initialContent.includes('<!DOCTYPE html>')) {
-              const parser = new DOMParser();
-              const doc = parser.parseFromString(initialContent, 'text/html');
-              const bodyContent = doc.body.innerHTML;
-              
-              // Clear the editor first
-              editor.DomComponents.clear();
-              
-              // Import the content
-              editor.setComponents(bodyContent);
-              
-              // Get the styles from body
-              const bodyStyles = doc.body.getAttribute('style');
-              if (bodyStyles) {
-                const bodyComponent = editor.DomComponents.getWrapper();
-                bodyComponent?.setStyle(bodyStyles as any);
+          if (initialContent) {
+            try {
+              if (initialContent.includes('<!DOCTYPE html>')) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(initialContent, 'text/html');
+                const bodyContent = doc.body.innerHTML;
+                const styles = Array.from(doc.querySelectorAll('style')).map(style => style.textContent).join('\n');
+                
+                editor.setComponents(bodyContent);
+                if (styles) {
+                  editor.setStyle(styles);
+                }
+              } else {
+                editor.setComponents(initialContent);
               }
-            } else {
+            } catch (error) {
+              console.error('Error loading initial content:', error);
               editor.setComponents(initialContent);
             }
-          } catch (error) {
-            console.error('Error loading content:', error);
-            editor.setComponents(initialContent);
           }
         });
 
@@ -304,7 +383,7 @@ const GrapeJSEditor = forwardRef<GrapeJSEditorRef, GrapeJSEditorProps>(({ initia
         }
       }
     };
-  }, []);
+  }, [language]); // Add language to dependency array
 
   return <div id="gjs" />;
 });

@@ -83,9 +83,9 @@ export default function ProfilePage() {
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <div className="text-center">
           <div className="animate-spin inline-block w-16 h-16 border-[4px] border-current border-t-transparent text-indigo-600 rounded-full" role="status">
-            <span className="sr-only">Loading...</span>
+            <span className="sr-only">{t('loading')}</span>
           </div>
-          <p className="mt-4 text-lg text-gray-600">Loading...</p>
+          <p className="mt-4 text-lg text-gray-600">{t('loading')}</p>
         </div>
       </div>
     )
@@ -191,7 +191,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 flex justify-end">
           <button 
             onClick={confirmDeleteAccount}
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
