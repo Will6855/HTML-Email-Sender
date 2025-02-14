@@ -46,7 +46,7 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/html-email-sender.git
+   git clone https://github.com/Will6855/html-email-sender.git
    cd html-email-sender
    ```
 
