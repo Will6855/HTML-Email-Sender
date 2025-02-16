@@ -135,35 +135,11 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
 
 ## 🚨 Known Issues
 
-### 🔍 Functional Limitations
-
 | Issue | Description | Impact |
 |-------|-------------|--------|
-| **Image Handling** | Only image URLs are supported | 🚫 Template Rendering Limitation |
+| **Webp Transparency** | Webp transparency is not supported | 🚫 Template Rendering Limitation |
 | **Translation System** | Incomplete translation file implementation | 🟢 No Functional Impact |
 | **CSV Table Editor** | Errors when editing contact lists | 🟢 No Functional Impact |
-
-### 💡 Detailed Explanations
-
-#### Image Rendering
-- 🖼️ **Supported**: Image URLs from the internet
-- 🚫 **Not Supported**: Local file uploads
-- If you select a local file for an image in the email template, it will break the email rendering
-
-#### Translation System
-- Current translation files lack a robust implementation
-- Translations are present but may not be fully optimized
-- Does not interfere with the application's core features
-
-#### CSV Table Editor
-- Occasional errors occur when editing contact lists
-- The issue is being investigated
-- Existing contact data remains unaffected
-
-### 🛠️ Workarounds and Future Improvements
-- For image insertion, use publicly accessible image URLs
-- Manually re-select your email account if needed
-- Report any persistent issues on our GitHub repository
 
 ## 🤝 Contributing
 
