@@ -8,7 +8,7 @@ import CSVTableEditor from '@/app/components/CSVTableEditor';
 import TemplateModal from '@/app/components/TemplateModal';
 import NotificationModal from '@/app/components/NotificationModal';
 import FileDropZone from '@/app/components/FileDropZone';
-import GrapeJSEditor, { GrapeJSEditorRef } from '@/app/components/GrapesJSEditor';
+import GrapesJSEditor, { GrapesJSEditorRef } from '@/app/components/GrapesJSEditor';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface Account {
@@ -89,7 +89,7 @@ const Home = () => {
     subject: string;
     senderName: string;
   }[]>([]);
-  const editorRef = useRef<GrapeJSEditorRef>(null);
+  const editorRef = useRef<GrapesJSEditorRef>(null);
 
   const loadTemplates = useCallback(async () => {
     try {
@@ -371,7 +371,7 @@ const Home = () => {
                 {t('emailContent')}
               </label>
               <div className="border rounded-lg overflow-hidden">
-                <GrapeJSEditor
+                <GrapesJSEditor
                   ref={editorRef}
                   initialContent={form.htmlContent}
                   onChange={(content) => {

@@ -78,17 +78,17 @@ const messages = {
   en: en
 }
 
-interface GrapeJSEditorProps {
+interface GrapesJSEditorProps {
   initialContent: string;
   onChange: (content: string) => void;
 }
 
-export interface GrapeJSEditorRef {
+export interface GrapesJSEditorRef {
   loadTemplate: (html: string) => void;
   getTemplate: () => string;
 }
 
-const GrapeJSEditor = forwardRef<GrapeJSEditorRef, GrapeJSEditorProps>(({ initialContent, onChange }, ref) => {
+const GrapesJSEditor = forwardRef<GrapesJSEditorRef, GrapesJSEditorProps>(({ initialContent, onChange }, ref) => {
   const editorRef = useRef<any>(null);
   const { language } = useLanguage();
 
@@ -388,6 +388,6 @@ const GrapeJSEditor = forwardRef<GrapeJSEditorRef, GrapeJSEditorProps>(({ initia
   return <div id="gjs" />;
 });
 
-GrapeJSEditor.displayName = 'GrapeJSEditor';
+GrapesJSEditor.displayName = 'GrapeJSEditor';
 
-export default GrapeJSEditor;
+export default GrapesJSEditor;
