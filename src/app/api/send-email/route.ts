@@ -32,6 +32,7 @@ export async function POST(request: Request) {
   const htmlContent = formData.get('htmlContent') as string;
   const senderName = formData.get('senderName') as string;
   const attachments = formData.getAll('attachments') as File[];
+  const cidImages = formData.getAll('cidImages') as string[];
 
   let transporter = nodemailer.createTransport({
     host: smtpServer,
@@ -50,10 +51,24 @@ export async function POST(request: Request) {
       to: to,
       subject: subject,
       html: htmlContent,
-      attachments: await Promise.all(attachments.map(async (file) => ({
-        filename: file.name,
-        content: Buffer.from(await file.arrayBuffer()),
-      }))),
+      attachments: [
+        // Process CID images
+        ...await Promise.all(cidImages.map(async (file, index) => {
+          const base64Data = file.split(',')[1];
+          const mimeType = file.split(';')[0].split(':')[1];
+          const filename = `image_${index}.${mimeType.split('/')[1]}`;
+          return {
+            filename: filename,
+            content: Buffer.from(base64Data, 'base64'),
+            cid: filename.replace(/\.[^/.]+$/, ''),
+          };
+        })).then(attachments => attachments.filter(attachment => attachment !== null)),
+        // Process regular attachments
+        ...await Promise.all(attachments.map(async (file) => ({
+          filename: file.name,
+          content: Buffer.from(await file.arrayBuffer()),
+        }))),
+      ],
     });
     return NextResponse.json({ message: 'Email sent successfully' }, { status: 200 });
   } catch (error) {

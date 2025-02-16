@@ -135,7 +135,6 @@ const GrapesJSEditor = forwardRef<GrapesJSEditorRef, GrapesJSEditorProps>(({ ini
   useEffect(() => {
     if (!editorRef.current) {
       try {
-        console.log(language, messages[language]);
         const editor = grapesjs.init({
           i18n: {
             locale: language,
@@ -387,7 +386,5 @@ const GrapesJSEditor = forwardRef<GrapesJSEditorRef, GrapesJSEditorProps>(({ ini
 
   return <div id="gjs" />;
 });
-
-GrapesJSEditor.displayName = 'GrapeJSEditor';
 
 export default GrapesJSEditor;

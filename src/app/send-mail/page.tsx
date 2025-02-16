@@ -164,6 +164,19 @@ const Home = () => {
     let successCount = 0;
     let errorCount = 0;
 
+    // Extract base64 images from HTML content
+    const base64Images: string[] = [];
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = form.htmlContent;
+    const imgElements = tempDiv.getElementsByTagName('img');
+    
+    for (let i = 0; i < imgElements.length; i++) {
+      const src = imgElements[i].getAttribute('src');
+      if (src && src.startsWith('data:image')) {
+        base64Images.push(src);
+      }
+    }
+
     for (const recipient of csvData) {
       const recipientEmail = recipient[emailColumn];
       if (!recipientEmail) {
@@ -184,12 +197,23 @@ const Home = () => {
         htmlContent = htmlContent.replace(new RegExp(`{{${key}}}`, 'g'), recipient[key]);
       });
       
+      // Replace base64 image sources with placeholders
+      base64Images.forEach((base64Image, index) => {
+        const placeholder = `cid:image_${index}`;
+        htmlContent = htmlContent.replace(base64Image, placeholder);
+      });
+      
       formData.append('htmlContent', htmlContent);
       formData.append('senderName', form.senderName);
 
       // Append attachments
       form.attachments.forEach(file => {
         formData.append('attachments', file);
+      });
+
+      // Append base64 images as cidImages
+      base64Images.forEach((base64Image, index) => {
+        formData.append('cidImages', base64Image);
       });
 
       try {
