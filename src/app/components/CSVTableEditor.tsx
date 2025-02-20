@@ -185,14 +185,14 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
             }
           })
         );
-    
-    // Call onFilteredDataChange if provided
-    if (onFilteredDataChange) {
-      queueMicrotask(() => onFilteredDataChange(filtered));
-    }
-    
     return filtered;
-  }, [rows, filterRules, onFilteredDataChange]);
+  }, [rows, filterRules]);
+
+  useEffect(() => {
+    if (onFilteredDataChange) {
+      onFilteredDataChange(filteredRows);
+    }
+  }, [filteredRows, onFilteredDataChange]);
 
   const handleExportCSV = useCallback(() => {
     const csvContent = [
