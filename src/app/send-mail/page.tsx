@@ -77,6 +77,7 @@ const Home = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
   const [csvData, setCsvData] = useState<Record<string, string>[]>([{ email: '' }]);
+  const [filteredCsvData, setFilteredCsvData] = useState<Record<string, string>[]>([{ email: '' }]);
   const [headers, setHeaders] = useState<string[]>(['email']);
   const [emailColumn, setEmailColumn] = useState<string>('email');
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
@@ -135,6 +136,7 @@ const Home = () => {
 
   const handleCsvDataLoaded = (data: Record<string, string>[]) => {
     setCsvData(data);
+    setFilteredCsvData(data);
     const newHeaders = Object.keys(data[0] || {});
     setHeaders(newHeaders);
     if (!emailColumn || !newHeaders.includes(emailColumn)) {
@@ -149,7 +151,7 @@ const Home = () => {
       return;
     }
 
-    if (!csvData || csvData.length === 0) {
+    if (!filteredCsvData || filteredCsvData.length === 0) {
       setNotification({ type: 'error', message: t('noCsvDataError') });
       setShowNotificationModal(true);
       return;
@@ -177,7 +179,7 @@ const Home = () => {
       }
     }
 
-    for (const recipient of csvData) {
+    for (const recipient of filteredCsvData) {
       const recipientEmail = recipient[emailColumn];
       if (!recipientEmail) {
         errorCount++;
@@ -334,6 +336,7 @@ const Home = () => {
               data={csvData} 
               headers={headers}
               onDataChange={handleCsvDataLoaded}
+              onFilteredDataChange={setFilteredCsvData}
               emailColumn={emailColumn}
               onEmailColumnChange={(value) => setEmailColumn(value)}
             />

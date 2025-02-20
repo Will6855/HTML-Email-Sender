@@ -1,26 +1,39 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
+import { FiFilter } from 'react-icons/fi';
 
 interface CSVTableEditorProps {
   data: Record<string, string>[];
   headers: string[];
   onDataChange: (data: Record<string, string>[]) => void;
+  onFilteredDataChange?: (filteredData: Record<string, string>[]) => void;
   emailColumn: string;
   onEmailColumnChange: (column: string) => void;
+}
+
+type FilterCondition = 'contains' | 'equals' | 'startsWith' | 'endsWith' | 'greaterThan' | 'lessThan';
+
+interface FilterRule {
+  column: string;
+  condition: FilterCondition;
+  value: string;
 }
 
 const CSVTableEditor: React.FC<CSVTableEditorProps> = ({ 
   data, 
   headers, 
   onDataChange, 
+  onFilteredDataChange, 
   emailColumn, 
   onEmailColumnChange 
 }) => {
   const [rows, setRows] = useState<Record<string, string>[]>(data);
   const [editingCell, setEditingCell] = useState<{ row: number; col: string; value: string } | null>(null);
   const [editingHeader, setEditingHeader] = useState<{ oldHeader: string; newHeader: string } | null>(null);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [filterRules, setFilterRules] = useState<FilterRule[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
 
@@ -163,6 +176,76 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
     document.body.removeChild(link);
   }, [headers, rows]);
 
+  const filteredRows = useMemo(() => {
+    const filtered = filterRules.length === 0 
+      ? rows 
+      : rows.filter(row => 
+          filterRules.every(rule => {
+            const cellValue = (row[rule.column] || '').toString().toLowerCase();
+            const ruleValue = rule.value.toLowerCase();
+
+            switch (rule.condition) {
+              case 'contains':
+                return cellValue.includes(ruleValue);
+              case 'equals':
+                return cellValue === ruleValue;
+              case 'startsWith':
+                return cellValue.startsWith(ruleValue);
+              case 'endsWith':
+                return cellValue.endsWith(ruleValue);
+              case 'greaterThan':
+                return parseFloat(cellValue) > parseFloat(ruleValue);
+              case 'lessThan':
+                return parseFloat(cellValue) < parseFloat(ruleValue);
+              default:
+                return true;
+            }
+          })
+        );
+    
+    // Call onFilteredDataChange if provided
+    if (onFilteredDataChange) {
+      onFilteredDataChange(filtered);
+    }
+    
+    return filtered;
+  }, [rows, filterRules, onFilteredDataChange]);
+
+  const openFilterModal = useCallback(() => {
+    setIsFilterModalOpen(true);
+  }, []);
+
+  const closeFilterModal = useCallback(() => {
+    setIsFilterModalOpen(false);
+  }, []);
+
+  const addFilterRule = useCallback(() => {
+    setFilterRules(prev => [...prev, { 
+      column: headers[0], 
+      condition: 'contains', 
+      value: '' 
+    }]);
+  }, [headers]);
+
+  const updateFilterRule = useCallback((index: number, updates: Partial<FilterRule>) => {
+    setFilterRules(prev => 
+      prev.map((rule, i) => i === index ? { ...rule, ...updates } : rule)
+    );
+  }, []);
+
+  const removeFilterRule = useCallback((index: number) => {
+    setFilterRules(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const applyFilters = useCallback(() => {
+    closeFilterModal();
+  }, [closeFilterModal]);
+
+  const resetFilters = useCallback(() => {
+    setFilterRules([]);
+    closeFilterModal();
+  }, [closeFilterModal]);
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -187,6 +270,13 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
           >
             {t('exportCsv')}
           </button>
+          <button 
+            onClick={openFilterModal}
+            className="text-gray-600 hover:text-gray-900"
+            title={t('advancedFilter')}
+          >
+            <FiFilter className="h-6 w-6" />
+          </button>
         </div>
       </div>
 
@@ -207,6 +297,91 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                 {header}
               </button>
             ))}
+          </div>
+        </div>
+      )}
+
+      {isFilterModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center h-full w-full z-50">
+          <div className="p-5 border w-[600px] shadow-lg rounded-md bg-white">
+            <div className="flex flex-col space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-medium">{t('advancedFilters')}</h3>
+                <button
+                  onClick={closeFilterModal}
+                  className="text-gray-400 hover:text-gray-500"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Filter Rules */}
+              {filterRules.map((rule, index) => (
+                <div key={index} className="flex items-center space-x-2 mb-2">
+                  <select
+                    value={rule.column}
+                    onChange={(e) => updateFilterRule(index, { column: e.target.value })}
+                    className="border rounded px-2 py-1"
+                  >
+                    {headers.map(header => (
+                      <option key={header} value={header}>{header}</option>
+                    ))}
+                  </select>
+
+                  <select
+                    value={rule.condition}
+                    onChange={(e) => updateFilterRule(index, { condition: e.target.value as FilterCondition })}
+                    className="border rounded px-2 py-1"
+                  >
+                    <option value="contains">{t('contains')}</option>
+                    <option value="equals">{t('equals')}</option>
+                    <option value="startsWith">{t('startsWith')}</option>
+                    <option value="endsWith">{t('endsWith')}</option>
+                    <option value="greaterThan">{t('greaterThan')}</option>
+                    <option value="lessThan">{t('lessThan')}</option>
+                  </select>
+
+                  <input
+                    type="text"
+                    value={rule.value}
+                    onChange={(e) => updateFilterRule(index, { value: e.target.value })}
+                    placeholder={t('filterValue')}
+                    className="border rounded px-2 py-1 flex-grow"
+                  />
+
+                  <button 
+                    onClick={() => removeFilterRule(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+
+              {/* Add Rule Button */}
+              <button 
+                onClick={addFilterRule}
+                className="mb-4 text-blue-500 hover:text-blue-700"
+              >
+                + {t('addFilterRule')}
+              </button>
+
+              {/* Modal Actions */}
+              <div className="flex justify-end space-x-2">
+                <button 
+                  onClick={resetFilters}
+                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+                >
+                  {t('resetFilters')}
+                </button>
+                <button 
+                  onClick={applyFilters}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  {t('applyFilters')}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -255,8 +430,8 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
             </tr>
           </thead>
           <tbody className="bg-white">
-            {rows.length > 0 ? (
-              rows.map((row, rowIndex) => (
+            {filteredRows.length > 0 ? (
+              filteredRows.map((row, rowIndex) => (
                 <tr key={rowIndex} className="border-b border-gray-200">
                   {headers.map((header) => (
                     <td key={header} className="px-6 py-4 whitespace-nowrap border-r border-gray-200">

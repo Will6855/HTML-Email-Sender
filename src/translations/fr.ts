@@ -205,5 +205,20 @@ export const fr = {
   unexpectedError: 'Une erreur inattendue s\'est produite',
   generatePasswordResetLinksForUsers: 'Générer des liens de réinitialisation de mot de passe pour les utilisateurs',
 
+  // Filter Translations
+  advancedFilters: 'Filtres Avancés',
+  addFilterRule: 'Ajouter une Règle de Filtre',
+  resetFilters: 'Réinitialiser les Filtres',
+  applyFilters: 'Appliquer les Filtres',
+  filterValue: 'Valeur du Filtre',
+
+  // Filter Conditions
+  contains: 'Contient',
+  equals: 'Égal à',
+  startsWith: 'Commence par',
+  endsWith: 'Se termine par',
+  greaterThan: 'Supérieur à',
+  lessThan: 'Inférieur à',
+
   loading: 'Chargement...'
 };

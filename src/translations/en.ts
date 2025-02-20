@@ -205,5 +205,20 @@ export const en = {
   unexpectedError: 'An unexpected error occurred',
   generatePasswordResetLinksForUsers: 'Generate password reset links for users',
 
+  // Filter Translations
+  advancedFilters: 'Advanced Filters',
+  addFilterRule: 'Add Filter Rule',
+  resetFilters: 'Reset Filters',
+  applyFilters: 'Apply Filters',
+  filterValue: 'Filter Value',
+  
+  // Filter Conditions
+  contains: 'Contains',
+  equals: 'Equals',
+  startsWith: 'Starts With',
+  endsWith: 'Ends With',
+  greaterThan: 'Greater Than',
+  lessThan: 'Less Than',
+
   loading: 'Loading...'
 };
