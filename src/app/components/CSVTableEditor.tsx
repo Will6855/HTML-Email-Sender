@@ -56,7 +56,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
         const newRows = prevRows.map((r, index) =>
           index === row ? { ...r, [col]: value } : r
         );
-        onDataChange(newRows);
+        queueMicrotask(() => onDataChange(newRows));
         return newRows;
       });
       setEditingCell(null);
@@ -83,7 +83,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
           }
           return newRow;
         });
-        onDataChange(newRows);
+        queueMicrotask(() => onDataChange(newRows));
         return newRows;
       });
     }
@@ -98,7 +98,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
     
     setRows(prevRows => {
       const newRows = [...prevRows, newRow];
-        onDataChange(newRows);
+      queueMicrotask(() => onDataChange(newRows));
       return newRows;
     });
   }, [headers, onDataChange]);
@@ -107,7 +107,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
     const newHeader = `Column ${headers.length + 1}`;
     setRows(prevRows => {
       const newRows = prevRows.map(row => ({ ...row, [newHeader]: '' }));
-      onDataChange(newRows);
+      queueMicrotask(() => onDataChange(newRows));
       return newRows;
     });
   }, [headers, onDataChange]);
@@ -115,7 +115,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
   const handleRemoveRow = useCallback((rowIndex: number) => {
     setRows(prevRows => {
       const newRows = prevRows.filter((_, index) => index !== rowIndex);
-      onDataChange(newRows);
+      queueMicrotask(() => onDataChange(newRows));
       return newRows;
     });
   }, [onDataChange]);
@@ -127,7 +127,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
         delete newRow[columnToRemove];
         return newRow;
       });
-      onDataChange(newRows);
+      queueMicrotask(() => onDataChange(newRows));
       return newRows;
     });
   }, [onDataChange]);
@@ -153,7 +153,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
         newRows.push(row);
       }
 
-      onDataChange(newRows);
+      queueMicrotask(() => onDataChange(newRows));
     };
     reader.readAsText(file);
     e.target.value = '';
@@ -188,7 +188,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
     
     // Call onFilteredDataChange if provided
     if (onFilteredDataChange) {
-      onFilteredDataChange(filtered);
+      queueMicrotask(() => onFilteredDataChange(filtered));
     }
     
     return filtered;

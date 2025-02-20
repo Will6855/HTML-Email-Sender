@@ -80,6 +80,10 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
   - Import contacts from CSV files
   - Export your contact list for backup
   - Use contact fields in email templates
+  - Filter contacts using multiple conditions:
+    - Contains, Equals, Starts with, Ends with
+    - Greater than, Less than (for numeric values)
+    - Combine multiple filters for advanced searching
 
 ### SMTP Configuration
 - **Email Service Setup**
@@ -138,8 +142,7 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
 | Issue | Description | Impact |
 |-------|-------------|--------|
 | **Webp Transparency** | Webp transparency is not supported | 🚫 Template Rendering Limitation |
-| **Translation System** | Incomplete translation file implementation | 🟢 No Functional Impact |
-| **CSV Table Editor** | Errors when editing contact lists | 🟢 No Functional Impact |
+| **Translations** | Single-file language storage needs optimization | ⚠️ Maintainability |
 
 ## 🤝 Contributing
 
