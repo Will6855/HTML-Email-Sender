@@ -159,23 +159,6 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
     e.target.value = '';
   }, [onDataChange]);
 
-  const handleExportCSV = useCallback(() => {
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => headers.map(header => row[header] || '').join(','))
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'contacts.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }, [headers, rows]);
-
   const filteredRows = useMemo(() => {
     const filtered = filterRules.length === 0 
       ? rows 
@@ -210,6 +193,23 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
     
     return filtered;
   }, [rows, filterRules, onFilteredDataChange]);
+
+  const handleExportCSV = useCallback(() => {
+    const csvContent = [
+      headers.join(','),
+      ...filteredRows.map(row => headers.map(header => row[header] || '').join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'contacts.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, [headers, filteredRows]);
 
   const openFilterModal = useCallback(() => {
     setIsFilterModalOpen(true);
