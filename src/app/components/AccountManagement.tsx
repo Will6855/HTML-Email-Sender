@@ -90,7 +90,7 @@ const AccountManagement = ({
       setIsModalOpen(false);
     } catch (error) {
       console.error('Error adding account:', error);
-      alert(error instanceof Error ? error.message : t('errorAddingAccount'));
+      alert(t('emailCampaign.accounts.errors.failedToAddAccount'));
     }
   };
 
@@ -117,12 +117,12 @@ const AccountManagement = ({
       setEditingAccount(null);
     } catch (error) {
       console.error('Error editing account:', error);
-      alert(t('errorEditingAccount'));
+      alert(t('emailCampaign.accounts.errors.failedToEditAccount'));
     }
   };
 
   const handleRemoveAccount = async (email: string) => {
-    const confirmRemove = window.confirm(`${t('confirmRemoveAccount')} ${email}`);
+    const confirmRemove = window.confirm(`${t('emailCampaign.accounts.confirmRemoveAccount')} ${email}`);
     if (!confirmRemove) return;
 
     try {
@@ -142,7 +142,7 @@ const AccountManagement = ({
       }
     } catch (error) {
       console.error('Error removing account:', error);
-      alert(t('errorRemovingAccount'));
+      alert(t('emailCampaign.accounts.errors.failedToDeleteAccount'));
     }
   };
 
@@ -151,9 +151,9 @@ const AccountManagement = ({
       <div className="flex justify-center items-center">
         <div className="text-center">
           <div className="animate-spin inline-block w-16 h-16 border-[4px] border-current border-t-transparent text-indigo-600 rounded-full" role="status">
-            <span className="sr-only">{t('loading')}</span>
+            <span className="sr-only">{t('common.status.loading')}</span>
           </div>
-          <p className="mt-4 text-lg text-gray-600">{t('loading')}</p>
+          <p className="mt-4 text-lg text-gray-600">{t('common.status.loading')}</p>
         </div>
       </div>
     )
@@ -162,12 +162,12 @@ const AccountManagement = ({
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">👥 {t('accountManagement')}</h2>
+        <h2 className="text-xl font-semibold">👥 {t('emailCampaign.accounts.title')}</h2>
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
-          {t('addAccount')}
+          {t('common.actions.add')}
         </button>
       </div>
 
@@ -221,7 +221,7 @@ const AccountManagement = ({
                 }}
                 className="text-blue-600 hover:text-blue-800"
               >
-                {t('edit')}
+                {t('common.actions.edit')}
               </button>
               <button
                 onClick={(e) => {
@@ -230,13 +230,13 @@ const AccountManagement = ({
                 }}
                 className="text-red-600 hover:text-red-800"
               >
-                {t('remove')}
+                {t('common.actions.delete')}
               </button>
             </div>
           </div>
         ))}
         {accounts.length === 0 && (
-          <p className="text-gray-500 text-center">{t('noAccounts')}</p>
+          <p className="text-gray-500 text-center">{t('emailCampaign.accounts.noAccounts')}</p>
         )}
       </div>
     </div>

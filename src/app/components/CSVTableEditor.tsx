@@ -249,7 +249,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">📊 {t('csvManagement')}</h2>
+        <h2 className="text-xl font-semibold">📊 {t('emailCampaign.csv.title')}</h2>
         <div className="flex space-x-2">
           <input
             type="file"
@@ -262,18 +262,18 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
             onClick={() => fileInputRef.current?.click()}
             className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            {t('importCsv')}
+            {t('emailCampaign.csv.import')}
           </button>
           <button
             onClick={handleExportCSV}
             className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
           >
-            {t('exportCsv')}
+            {t('emailCampaign.csv.export')}
           </button>
           <button 
             onClick={openFilterModal}
             className="text-gray-600 hover:text-gray-900"
-            title={t('advancedFilters')}
+            title={t('emailCampaign.csv.advancedFilters')}
           >
             <FiFilter className="h-6 w-6" />
           </button>
@@ -282,7 +282,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
 
       {headers.length > 0 && (
         <div className="flex items-center space-x-2 mb-2 text-sm">
-          <span className="text-gray-600">{t('emailColumnLabel')}</span>
+          <span className="text-gray-600">{t('emailCampaign.csv.emailColumnLabel')}</span>
           <div className="flex space-x-1 overflow-x-auto">
             {headers.map((header) => (
               <button
@@ -306,7 +306,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
           <div className="p-5 border w-[600px] shadow-lg rounded-md bg-white">
             <div className="flex flex-col space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium">{t('advancedFilters')}</h3>
+                <h3 className="text-lg font-medium">{t('emailCampaign.csv.advancedFilters')}</h3>
                 <button
                   onClick={closeFilterModal}
                   className="text-gray-400 hover:text-gray-500"
@@ -333,19 +333,19 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                     onChange={(e) => updateFilterRule(index, { condition: e.target.value as FilterCondition })}
                     className="border rounded px-2 py-1"
                   >
-                    <option value="contains">{t('contains')}</option>
-                    <option value="equals">{t('equals')}</option>
-                    <option value="startsWith">{t('startsWith')}</option>
-                    <option value="endsWith">{t('endsWith')}</option>
-                    <option value="greaterThan">{t('greaterThan')}</option>
-                    <option value="lessThan">{t('lessThan')}</option>
+                    <option value="contains">{t('emailCampaign.csv.filters.contains')}</option>
+                    <option value="equals">{t('emailCampaign.csv.filters.equals')}</option>
+                    <option value="startsWith">{t('emailCampaign.csv.filters.startsWith')}</option>
+                    <option value="endsWith">{t('emailCampaign.csv.filters.endsWith')}</option>
+                    <option value="greaterThan">{t('emailCampaign.csv.filters.greaterThan')}</option>
+                    <option value="lessThan">{t('emailCampaign.csv.filters.lessThan')}</option>
                   </select>
 
                   <input
                     type="text"
                     value={rule.value}
                     onChange={(e) => updateFilterRule(index, { value: e.target.value })}
-                    placeholder={t('filterValue')}
+                    placeholder={t('emailCampaign.csv.filters.filterValuePlaceholder')}
                     className="border rounded px-2 py-1 flex-grow"
                   />
 
@@ -363,7 +363,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                 onClick={addFilterRule}
                 className="mb-4 text-blue-500 hover:text-blue-700"
               >
-                + {t('addFilterRule')}
+                + {t('emailCampaign.csv.filters.addFilterRule')}
               </button>
 
               {/* Modal Actions */}
@@ -372,13 +372,13 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                   onClick={resetFilters}
                   className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
                 >
-                  {t('resetFilters')}
+                  {t('emailCampaign.csv.filters.resetFilters')}
                 </button>
                 <button 
                   onClick={applyFilters}
                   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                 >
-                  {t('applyFilters')}
+                  {t('emailCampaign.csv.filters.applyFilters')}
                 </button>
               </div>
             </div>
@@ -413,7 +413,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                         onClick={() => handleRemoveColumn(header)}
                         className="mt-1 text-xs text-red-600 hover:text-red-800"
                       >
-                        {t('removeColumn')}
+                        {t('emailCampaign.csv.removeColumn')}
                       </button>
                     </>
                   )}
@@ -424,7 +424,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                   onClick={handleAddColumn}
                   className="text-indigo-600 hover:text-indigo-900"
                 >
-                  {t('addColumn')}
+                  {t('emailCampaign.csv.addColumn')}
                 </button>
               </th>
             </tr>
@@ -460,7 +460,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                       onClick={() => handleRemoveRow(rowIndex)}
                       className="mt-1 text-xs text-red-600 hover:text-red-800"
                     >
-                      {t('removeRow')}
+                      {t('emailCampaign.csv.removeRow')}
                     </button>
                   </td>
                 </tr>
@@ -468,7 +468,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
             ) : (
               <tr>
                 <td colSpan={headers.length + 1} className="px-6 py-4 text-center text-gray-500">
-                  {t('noRows')}
+                  {t('emailCampaign.csv.noRows')}
                 </td>
               </tr>
             )}
@@ -480,7 +480,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
                   onClick={handleAddRow}
                   className="text-indigo-600 hover:text-indigo-900"
                 >
-                  {t('addRow')}
+                  {t('emailCampaign.csv.addRow')}
                 </button>
               </td>
             </tr>

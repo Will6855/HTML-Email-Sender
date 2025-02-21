@@ -16,8 +16,8 @@ export default function Login() {
   const router = useRouter();
 
   const loginSchema = z.object({
-    username: z.string().min(1, t('usernameRequired')),
-    password: z.string().min(1, t('passwordRequired'))
+    username: z.string().min(1, t('auth.errors.usernameRequired')),
+    password: z.string().min(1, t('auth.errors.passwordRequired'))
   });
 
   const { 
@@ -39,14 +39,14 @@ export default function Login() {
       });
 
       if (result?.error) {
-        setError(t('invalidUsernameOrPassword'));
+        setError(t('auth.errors.invalidCredentials'));
         return;
       }
 
       // Redirect to send-mail page on successful login
       router.push("/send-mail");
     } catch (err) {
-      setError(t('unexpectedError'));
+      setError(t('common.errors.unexpectedError'));
     }
   };
 
@@ -54,7 +54,7 @@ export default function Login() {
     <LanguageProvider>
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">{t('loginTitle')}</h1>
+        <h1 className="text-2xl font-bold mb-6 text-center">{t('auth.login.title')}</h1>
         
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -64,13 +64,13 @@ export default function Login() {
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label htmlFor="username" className="block mb-2">{t('username')}</label>
+            <label htmlFor="username" className="block mb-2">{t('auth.login.fields.username')}</label>
             <input 
               {...register('username')}
               type="text" 
               id="username"
               className="w-full px-3 py-2 border rounded-md"
-              placeholder={t('usernamePlaceholder')}
+              placeholder={t('auth.login.fields.usernamePlaceholder')}
             />
             {errors.username && (
               <p className="text-red-500 text-sm mt-1">{errors.username.message}</p>
@@ -78,13 +78,13 @@ export default function Login() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block mb-2">{t('password')}</label>
+            <label htmlFor="password" className="block mb-2">{t('auth.login.fields.password')}</label>
             <input 
               {...register('password')}
               type="password" 
               id="password"
               className="w-full px-3 py-2 border rounded-md"
-              placeholder={t('passwordPlaceholder')}
+              placeholder={t('auth.login.fields.passwordPlaceholder')}
             />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
@@ -96,7 +96,7 @@ export default function Login() {
               type="submit" 
               className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
             >
-              {t('signIn')}
+              {t('auth.login.submit')}
             </button>
           </div>
         </form>
@@ -106,13 +106,13 @@ export default function Login() {
             onClick={() => setShowForgotPasswordModal(true)}
             className="text-sm text-blue-500 hover:underline"
           >
-            {t('forgotPassword')}
+            {t('auth.login.forgotPassword')}
           </button>
 
           <p className="text-sm text-gray-600">
-            {t('noAccount')}
+            {t('auth.login.noAccount')}
             <a href="/register" className="text-blue-500 ml-1 hover:underline">
-              {t('signUp')}
+              {t('auth.login.register')}
             </a>
           </p>
         </div>
@@ -130,12 +130,12 @@ export default function Login() {
             </button>
             <div className="flex flex-col space-y-4">
               <div className="w-full text-center">
-                <h3 className="text-lg font-medium">{t('forgotPassword')}</h3>
+                <h3 className="text-lg font-medium">{t('auth.login.forgotPassword')}</h3>
               </div>
 
               <div className="text-center">
                 <p className="text-gray-600 mb-4">
-                  {t('forgotPasswordHelp')}
+                  {t('auth.login.forgotPasswordHelp')}
                 </p>
               </div>
             </div>

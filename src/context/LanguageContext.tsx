@@ -2,9 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { translations } from '@/translations';
-
-// Add this type definition using the keys from your translations
-type TranslationKey = keyof typeof translations.en;
+import type { TranslationKey } from '@/translations';
 
 type Language = 'en' | 'fr';
 
@@ -48,9 +46,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const t = (key: TranslationKey, params?: string[]): string => {
-    let translation = translations[language][key] || key;
+    // Get nested value using key path (e.g., 'common.status.loading')
+    const getValue = (obj: any, path: string): string => {
+      const value = path.split('.').reduce((acc, part) => acc?.[part], obj);
+      return typeof value === 'string' ? value : path;
+    };
+
+    let translation = getValue(translations[language], key);
     
-    // Replace placeholders if params are provided
     if (params) {
       params.forEach((param, index) => {
         translation = translation.replace(`{${index}}`, param);

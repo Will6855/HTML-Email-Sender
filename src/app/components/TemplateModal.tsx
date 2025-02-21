@@ -38,7 +38,7 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
         setNewTemplateName('');
         onClose();
       } catch (error) {
-        console.error(t('errorSavingTemplate'), error);
+        console.error(t('emailCampaign.templates.errors.errorSavingTemplate'), error);
       }
     }
   };
@@ -73,12 +73,12 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
         onClick={e => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium">{t('emailTemplates')}</h3>
+          <h3 className="text-lg font-medium">{t('emailCampaign.templates.title')}</h3>
           <button 
             onClick={onClose} 
             className="text-gray-500 hover:text-gray-700"
             type="button"
-            aria-label={t('close')}
+            aria-label={t('common.actions.close')}
           >
             ✕
           </button>
@@ -87,7 +87,7 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
         <div className="flex mb-4 space-x-2">
           <input 
             type="text" 
-            placeholder={t('templateName')}
+            placeholder={t('emailCampaign.templates.templateNamePlaceholder')}
             value={newTemplateName}
             onChange={(e) => setNewTemplateName(e.target.value)}
             onKeyPress={handleKeyPress}
@@ -99,7 +99,7 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
             className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 flex-shrink-0"
             type="submit"
           >
-            {t('save')}
+            {t('common.actions.save')}
           </button>
         </div>
 
@@ -116,20 +116,20 @@ const TemplateModal: React.FC<TemplateModalProps> = ({
                   className="text-blue-500 hover:text-blue-700"
                   type="button"
                 >
-                  {t('load')}
+                  {t('common.actions.load')}
                 </button>
                 <button
                   onClick={(e) => handleDelete(template, e)}
                   className="text-red-500 hover:text-red-700"
                   type="button"
                 >
-                  {t('delete')}
+                  {t('common.actions.delete')}
                 </button>
               </div>
             </div>
           ))}
           {templates.length === 0 && (
-            <p className="text-gray-500 text-center py-4">{t('noTemplatesSaved')}</p>
+            <p className="text-gray-500 text-center py-4">{t('emailCampaign.templates.noTemplatesSaved')}</p>
           )}
         </div>
       </div>

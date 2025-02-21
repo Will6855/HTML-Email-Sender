@@ -83,9 +83,9 @@ export default function ProfilePage() {
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <div className="text-center">
           <div className="animate-spin inline-block w-16 h-16 border-[4px] border-current border-t-transparent text-indigo-600 rounded-full" role="status">
-            <span className="sr-only">{t('loading')}</span>
+            <span className="sr-only">{t('common.status.loading')}</span>
           </div>
-          <p className="mt-4 text-lg text-gray-600">{t('loading')}</p>
+          <p className="mt-4 text-lg text-gray-600">{t('common.status.loading')}</p>
         </div>
       </div>
     )
@@ -122,7 +122,7 @@ export default function ProfilePage() {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
               </svg>
-              <p>Joined {new Date(session?.user?.createdAt).toLocaleDateString()}</p>
+              <p> {t('profile.joined')} {new Date(session?.user?.createdAt).toLocaleDateString()}</p>
             </div>
           </div>
           </div>
@@ -130,11 +130,11 @@ export default function ProfilePage() {
           {/* Email Accounts Section */}
           <div className="bg-white shadow-lg rounded-2xl p-6">
             <div className="flex justify-between items-center mb-4 border-b pb-3">
-              <h2 className="text-xl font-semibold text-gray-800">{t('emailAccounts')}</h2>
+              <h2 className="text-xl font-semibold text-gray-800">{t('profile.emailAccounts')}</h2>
             </div>
             {emailAccounts.length === 0 ? (
               <div className="text-center text-gray-500 py-4">
-                <p>{t('noEmailAccountsFound')}</p>
+                <p>{t('profile.noEmailAccountsFound')}</p>
               </div>
             ) : (
               <ul className="space-y-4">
@@ -156,7 +156,7 @@ export default function ProfilePage() {
 
         {/* Account Management Section */}
         <div className="bg-white shadow-lg rounded-2xl p-8">
-          <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-3">{t('accountManagement')}</h2>
+          <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-3">{t('profile.accountManagement')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Link 
               href="/profile/change-email" 
@@ -165,7 +165,7 @@ export default function ProfilePage() {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              <span className="font-medium">{t('changeEmail')}</span>
+              <span className="font-medium">{t('profile.changeEmail.title')}</span>
             </Link>
             <Link 
               href="/profile/change-password" 
@@ -174,7 +174,7 @@ export default function ProfilePage() {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
-              <span className="font-medium">{t('changePassword')}</span>
+              <span className="font-medium">{t('profile.changePassword.title')}</span>
             </Link>
             {session?.user?.role === 'ADMIN' && (
               <Link 
@@ -185,7 +185,7 @@ export default function ProfilePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <span className="font-medium">{t('adminDashboard')}</span>
+                <span className="font-medium">{t('admin.title')}</span>
               </Link>
             )}
           </div>
@@ -196,26 +196,26 @@ export default function ProfilePage() {
             onClick={confirmDeleteAccount}
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
           >
-            {t('deleteAccount')}
+            {t('profile.deleteAccount.title')}
           </button>
 
           {showDeleteConfirmation && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <div className="bg-white p-6 rounded-lg shadow-xl">
-                <h2 className="text-xl font-bold mb-4">{t('confirmDeleteAccount')}</h2>
-                <p className="mb-4">{t('deleteAccountWarning')}</p>
+                <h2 className="text-xl font-bold mb-4">{t('profile.deleteAccount.title')}</h2>
+                <p className="mb-4">{t('profile.deleteAccount.warning')}</p>
                 <div className="flex justify-between">
                   <button 
                     onClick={cancelDeleteAccount}
                     className="bg-gray-300 text-black px-4 py-2 rounded mr-2"
                   >
-                    {t('cancel')}
+                    {t('profile.deleteAccount.cancel')}
                   </button>
                   <button 
                     onClick={handleDeleteAccount}
                     className="bg-red-500 text-white px-4 py-2 rounded"
                   >
-                    {t('confirm')}
+                    {t('profile.deleteAccount.confirm')}
                   </button>
                 </div>
               </div>

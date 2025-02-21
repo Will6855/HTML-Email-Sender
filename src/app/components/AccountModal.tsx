@@ -73,29 +73,29 @@ const AccountModal = ({
     const newErrors: Partial<Record<keyof Account, string>> = {};
 
     if (!newAccount.email) {
-      newErrors.email = t('emailRequired');
+      newErrors.email = t('emailCampaign.accounts.errors.emailRequired');
     } else if (!/\S+@\S+\.\S+/.test(newAccount.email)) {
-      newErrors.email = t('invalidEmail');
+      newErrors.email = t('emailCampaign.accounts.errors.invalidEmail');
     }
 
     if (mode === 'add' && (!password || password.length < 6)) {
       newErrors.password = mode === 'add' 
-        ? t('passwordRequired') 
-        : t('passwordTooShort');
+        ? t('emailCampaign.accounts.errors.passwordRequired') 
+        : t('emailCampaign.accounts.errors.passwordTooShort');
     }
 
     if (!newAccount.name) {
-      newErrors.name = t('nameRequired');
+      newErrors.name = t('emailCampaign.accounts.errors.nameRequired');
     }
 
     if (!newAccount.smtpServer) {
-      newErrors.smtpServer = t('smtpServerRequired');
+      newErrors.smtpServer = t('emailCampaign.accounts.errors.smtpServerRequired');
     }
 
     if (!newAccount.smtpPort) {
-      newErrors.smtpPort = t('smtpPortRequired');
+      newErrors.smtpPort = t('emailCampaign.accounts.errors.smtpPortRequired');
     } else if (newAccount.smtpPort < 1 || newAccount.smtpPort > 65535) {
-      newErrors.smtpPort = t('invalidSmtpPort');
+      newErrors.smtpPort = t('emailCampaign.accounts.errors.smtpPortInvalid');
     }
 
     setErrors(newErrors);
@@ -142,7 +142,7 @@ const AccountModal = ({
       <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div className="flex flex-col space-y-4">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">{mode === 'add' ? t('addAccount') : t('editAccount')}</h3>
+            <h3 className="text-lg font-medium">{mode === 'add' ? t('emailCampaign.accounts.modal.titleAddAccount') : t('emailCampaign.accounts.modal.titleEditAccount')}</h3>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-500"
@@ -152,7 +152,7 @@ const AccountModal = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">{t('name')}</label>
+            <label className="block text-sm font-medium text-gray-700">{t('emailCampaign.accounts.modal.fields.name')}</label>
             <input
               type="text"
               value={newAccount.name}
@@ -160,13 +160,13 @@ const AccountModal = ({
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                 errors.name ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
               }`}
-              placeholder={t('senderNamePlaceholder')}
+              placeholder={t('emailCampaign.accounts.modal.fields.namePlaceholder')}
             />
             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">{t('email')}</label>
+            <label className="block text-sm font-medium text-gray-700">{t('emailCampaign.accounts.modal.fields.email')}</label>
             <input
               type="email"
               value={newAccount.email}
@@ -174,13 +174,13 @@ const AccountModal = ({
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                 errors.email ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
               }`}
-              placeholder="john@example.com"
+              placeholder={t('emailCampaign.accounts.modal.fields.emailPlaceholder')}
             />
             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">{t('password')}</label>
+            <label className="block text-sm font-medium text-gray-700">{t('emailCampaign.accounts.modal.fields.password')}</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -202,7 +202,7 @@ const AccountModal = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">{t('smtpServer')}</label>
+            <label className="block text-sm font-medium text-gray-700">{t('emailCampaign.accounts.modal.fields.smtpServer')}</label>
             <input
               type="text"
               value={newAccount.smtpServer}
@@ -210,13 +210,13 @@ const AccountModal = ({
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                 errors.smtpServer ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
               }`}
-              placeholder="smtp.gmail.com"
+              placeholder={t('emailCampaign.accounts.modal.fields.smtpServerPlaceholder')}
             />
             {errors.smtpServer && <p className="text-red-500 text-xs mt-1">{errors.smtpServer}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">{t('smtpPort')}</label>
+            <label className="block text-sm font-medium text-gray-700">{t('emailCampaign.accounts.modal.fields.smtpPort')}</label>
             <input
               type="number"
               value={newAccount.smtpPort}
@@ -224,7 +224,7 @@ const AccountModal = ({
               className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
                 errors.smtpPort ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''
               }`}
-              placeholder="587"
+              placeholder={t('emailCampaign.accounts.modal.fields.smtpPortPlaceholder')}
               min="1"
               max="65535"
             />
@@ -235,7 +235,7 @@ const AccountModal = ({
             onClick={handleSubmit}
             className="w-full bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            {mode === 'add' ? t('addAccount') : t('saveChanges')}
+            {mode === 'add' ? t('emailCampaign.accounts.modal.submitAddAccount') : t('emailCampaign.accounts.modal.submitEditAccount')}
           </button>
         </div>
       </div>

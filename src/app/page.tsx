@@ -18,11 +18,11 @@ const Home = () => {
               <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:col-span-6 lg:mt-20 lg:px-8 xl:mt-28">
                 <div className="sm:text-center lg:text-left">
                   <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                    <span className="block">{t('heroTitle')}</span>
-                    <span className="block text-indigo-600 mt-3">{t('heroSubtitle')}</span>
+                    <span className="block">{t('home.hero.title')}</span>
+                    <span className="block text-indigo-600 mt-3">{t('home.hero.subtitle')}</span>
                   </h1>
                   <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                    {t('heroDescription')}
+                    {t('home.hero.description')}
                   </p>
                   <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                     <div className="rounded-md shadow">
@@ -30,7 +30,7 @@ const Home = () => {
                         href="/send-mail"
                         className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
                       >
-                        {t('getStarted')}
+                        {t('home.hero.cta')}
                       </Link>
                     </div>
                   </div>
@@ -69,39 +69,49 @@ const Home = () => {
       <div className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
-            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">{t('features')}</h2>
+            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">
+              {t('home.features.section.title')}
+            </h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-              {t('featuresTitle')}
+              {t('home.features.section.mainTitle')}
             </p>
           </div>
 
           <div className="mt-10">
             <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
               <div className="relative">
-                <div className="text-lg leading-6 font-medium text-gray-900">{t('csvSupport')}</div>
+                <div className="text-lg leading-6 font-medium text-gray-900">
+                  {t('home.features.items.csv.title')}
+                </div>
                 <p className="mt-2 text-base text-gray-500">
-                  {t('csvDescription')}
+                  {t('home.features.items.csv.description')}
                 </p>
               </div>
 
               <div className="relative">
-                <div className="text-lg leading-6 font-medium text-gray-900">{t('htmlTemplates')}</div>
+                <div className="text-lg leading-6 font-medium text-gray-900">
+                  {t('home.features.items.templates.title')}
+                </div>
                 <p className="mt-2 text-base text-gray-500">
-                  {t('htmlTemplatesDescription')}
+                  {t('home.features.items.templates.description')}
                 </p>
               </div>
 
               <div className="relative">
-                <div className="text-lg leading-6 font-medium text-gray-900">{t('personalization')}</div>
+                <div className="text-lg leading-6 font-medium text-gray-900">
+                  {t('home.features.items.personalization.title')}
+                </div>
                 <p className="mt-2 text-base text-gray-500">
-                  {t('personalizationDescription')}
+                  {t('home.features.items.personalization.description')}
                 </p>
               </div>
 
               <div className="relative">
-                <div className="text-lg leading-6 font-medium text-gray-900">{t('fileAttachments')}</div>
+                <div className="text-lg leading-6 font-medium text-gray-900">
+                  {t('home.features.items.attachments.title')}
+                </div>
                 <p className="mt-2 text-base text-gray-500">
-                  {t('fileAttachmentsDescription')}
+                  {t('home.features.items.attachments.description')}
                 </p>
               </div>
             </div>
@@ -113,31 +123,39 @@ const Home = () => {
       <div className="py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center mb-10">
-            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">{t('howItWorks')}</h2>
+            <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">
+              {t('home.howItWorks.section.title')}
+            </h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-              {t('howItWorksTitle')}
+              {t('home.howItWorks.section.mainTitle')}
             </p>
           </div>
 
           <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8 md:gap-y-10">
             <div className="relative">
-              <div className="text-lg leading-6 font-medium text-gray-900">{t('step1Title')}</div>
+              <div className="text-lg leading-6 font-medium text-gray-900">
+                {t('home.howItWorks.steps.smtp.title')}
+              </div>
               <p className="mt-2 text-base text-gray-500">
-                {t('step1Description')}
+                {t('home.howItWorks.steps.smtp.description')}
               </p>
             </div>
 
             <div className="relative">
-              <div className="text-lg leading-6 font-medium text-gray-900">{t('step2Title')}</div>
+              <div className="text-lg leading-6 font-medium text-gray-900">
+                {t('home.howItWorks.steps.contacts.title')}
+              </div>
               <p className="mt-2 text-base text-gray-500">
-                {t('step2Description')}
+                {t('home.howItWorks.steps.contacts.description')}
               </p>
             </div>
 
             <div className="relative">
-              <div className="text-lg leading-6 font-medium text-gray-900">{t('step3Title')}</div>
+              <div className="text-lg leading-6 font-medium text-gray-900">
+                {t('home.howItWorks.steps.send.title')}
+              </div>
               <p className="mt-2 text-base text-gray-500">
-                {t('step3Description')}
+                {t('home.howItWorks.steps.send.description')}
               </p>
             </div>
           </div>

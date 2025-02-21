@@ -142,7 +142,6 @@ A modern, feature-rich Next.js application for composing and sending HTML emails
 | Issue | Description | Impact |
 |-------|-------------|--------|
 | **Webp Transparency** | Webp transparency is not supported | 🚫 Template Rendering Limitation |
-| **Translations** | Single-file language storage needs optimization | ⚠️ Maintainability |
 
 ## 🤝 Contributing
 

@@ -21,9 +21,9 @@ const Header = () => {
   };
 
   const navigation = [
-    { name: t('home'), href: '/' },
-    { name: t('newEmail'), href: '/send-mail' },
-    { name: t('profile'), href: '/profile' },
+    { name: t('navigation.home'), href: '/' },
+    { name: t('navigation.newEmail'), href: '/send-mail' },
+    { name: t('navigation.profile'), href: '/profile' },
   ];
 
   return (
@@ -60,13 +60,13 @@ const Header = () => {
             {status === 'authenticated' ? (
             <div className="flex items-center space-x-2">
               <span className="text-gray-700">
-                {t('welcome')}{session.user.username}
+                {t('auth.welcome')}{session.user.username}
               </span>
               <button 
                 onClick={handleLogout}
                 className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition-colors"
               >
-                {t('logout')}
+                {t('auth.logout')}
               </button>
             </div>
           ) : (
@@ -74,7 +74,7 @@ const Header = () => {
               href="/login" 
               className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 transition-colors"
             >
-              {t('signIn')}
+              {t('auth.signIn')}
             </a>
           )}
           <LanguageSwitch />

@@ -19,9 +19,9 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, files, onFileR
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return `0 ${t('bytes')}`;
+    if (bytes === 0) return `0 ${t('common.units.bytes')}`;
     const k = 1024;
-    const sizes = [t('bytes'), t('kb'), t('mb'), t('gb')];
+    const sizes = [t('common.units.bytes'), t('common.units.kb'), t('common.units.mb'), t('common.units.gb')];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
@@ -35,15 +35,15 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, files, onFileR
       >
         <input {...getInputProps()} />
         {isDragActive ? (
-          <p className="text-blue-500">{t('dragAndDrop')}</p>
+          <p className="text-blue-500">{t('emailCampaign.filedropzone.dragAndDrop')}</p>
         ) : (
-          <p className="text-gray-500">{t('dropFiles')}</p>
+          <p className="text-gray-500">{t('emailCampaign.filedropzone.dropFiles')}</p>
         )}
       </div>
       
       {files.length > 0 && (
         <div className="mt-4">
-          <h4 className="text-sm font-medium mb-2">{t('attachments')}:</h4>
+          {/* <h4 className="text-sm font-medium mb-2">{t('emailCampaign.filedropzone.attachments')}:</h4> */}
           <div className="space-y-2">
             {files.map((file, index) => (
               <div
@@ -57,7 +57,7 @@ const FileDropZone: React.FC<FileDropZoneProps> = ({ onFilesDrop, files, onFileR
                 <button
                   onClick={() => onFileRemove(index)}
                   className="text-red-500 hover:text-red-700"
-                  aria-label={t('remove')}
+                  aria-label={t('common.actions.remove')}
                 >
                   ✕
                 </button>

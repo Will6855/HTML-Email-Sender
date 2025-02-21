@@ -23,8 +23,8 @@ const LanguageSwitch: React.FC = () => {
   }, []);
 
   const languages = [
-    { code: 'en', name: t('english'), flag: '🇬🇧' },
-    { code: 'fr', name: t('french'), flag: '🇫🇷' },
+    { code: 'en', name: t('common.language.english'), flag: '🇬🇧' },
+    { code: 'fr', name: t('common.language.french'), flag: '🇫🇷' },
   ];
 
   const currentLanguage = languages.find(lang => lang.code === language) || languages[0];

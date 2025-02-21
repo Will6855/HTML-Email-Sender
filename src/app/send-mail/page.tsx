@@ -49,9 +49,9 @@ export default function SendMailPage() {
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <div className="text-center">
           <div className="animate-spin inline-block w-16 h-16 border-[4px] border-current border-t-transparent text-indigo-600 rounded-full" role="status">
-            <span className="sr-only">{t('loading')}</span>
+            <span className="sr-only">{t('common.status.loading')}</span>
           </div>
-          <p className="mt-4 text-lg text-gray-600">{t('loading')}</p>
+          <p className="mt-4 text-lg text-gray-600">{t('common.status.loading')}</p>
         </div>
       </div>
     );
@@ -146,25 +146,25 @@ const Home = () => {
 
   const handleSendEmails = async () => {
     if (session?.user?.role === 'DEMO') {
-      setNotification({ type: 'error', message: t('demoRoleCannotSendEmails') });
+      setNotification({ type: 'error', message: t('emailCampaign.form.errors.demoRoleCannotSendEmails') });
       setShowNotificationModal(true);
       return;
     }
 
     if (!form.selectedAccount) {
-      setNotification({ type: 'error', message: t('selectAccountError') });
+      setNotification({ type: 'error', message: t('emailCampaign.form.errors.noAccount') });
       setShowNotificationModal(true);
       return;
     }
 
     if (!filteredCsvData || filteredCsvData.length === 0) {
-      setNotification({ type: 'error', message: t('noCsvDataError') });
+      setNotification({ type: 'error', message: t('emailCampaign.form.errors.noCsvData') });
       setShowNotificationModal(true);
       return;
     }
 
     if (!emailColumn) {
-      alert(t('selectEmailColumnError'));
+      alert(t('emailCampaign.form.errors.selectEmailColumnError'));
       return;
     }
 
@@ -245,9 +245,9 @@ const Home = () => {
 
     setIsLoading(false);
     if (errorCount === 0) {
-      setNotification({ type: 'success', message: t('emailSendSuccess') });
+      setNotification({ type: 'success', message: t('emailCampaign.sending.status.success', [successCount.toString(), errorCount.toString()]) });
     } else {
-      setNotification({ type: 'error', message: t('emailSendSummary', [successCount.toString(), errorCount.toString()]) });
+      setNotification({ type: 'error', message: t('emailCampaign.sending.status.partial', [successCount.toString(), errorCount.toString()]) });
     }
     setShowNotificationModal(true);
   };
@@ -320,8 +320,8 @@ const Home = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">{t('emailCampaignManager')}</h1>
-          <p className="mt-2 text-sm text-gray-600">{t('emailCampaignDescription')}</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('emailCampaign.title')}</h1>
+          <p className="mt-2 text-sm text-gray-600">{t('emailCampaign.description')}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -354,14 +354,14 @@ const Home = () => {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-gray-900">
               <span className="mr-2">✉️</span>
-              {t('emailContent')}
+              {t('emailCampaign.form.title')}
             </h2>
             <div className="space-x-2">
               <button
                 onClick={() => setIsTemplateModalOpen(true)}
                 className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
               >
-                {t('manageTemplates')}
+                {t('emailCampaign.templates.title')}
               </button>
             </div>
           </div>
@@ -369,7 +369,7 @@ const Home = () => {
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
                 <label htmlFor="senderName" className="block text-sm font-medium text-gray-700">
-                  {t('senderName')}
+                  {t('emailCampaign.form.senderName')}
                 </label>
                 <input
                   type="text"
@@ -379,12 +379,12 @@ const Home = () => {
                   onChange={handleChange}
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder={t('senderNamePlaceholder')}
+                  placeholder={t('emailCampaign.form.senderNamePlaceholder')}
                 />
               </div>
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
-                  {t('subjectLine')}
+                  {t('emailCampaign.form.subject')}
                 </label>
                 <input
                   type="text"
@@ -394,14 +394,14 @@ const Home = () => {
                   onChange={handleChange}
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  placeholder={t('subjectPlaceholder')}
+                  placeholder={t('emailCampaign.form.subjectPlaceholder')}
                 />
               </div>
             </div>
 
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                {t('emailContent')}
+                {t('emailCampaign.form.content')}
               </label>
               <div className="border rounded-lg overflow-hidden">
                 <GrapesJSEditor
@@ -417,12 +417,12 @@ const Home = () => {
               </div>
             </div>
             <p className="mt-2 text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
-                💡 {t('personalizationTip')}
+                💡 {t('emailCampaign.form.personalizationTip')}
             </p>
 
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                {t('attachments')}
+                {t('emailCampaign.form.attachments')}
               </label>
               <div className="mt-1 flex items-center space-x-4">
                 <FileDropZone
@@ -448,9 +448,9 @@ const Home = () => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    {t('sending')}
+                    {t('emailCampaign.form.actions.sending')}
                   </span>
-                ) : t('sendEmails')}
+                ) : t('emailCampaign.form.actions.sendEmails')}
               </button>
             </div>
           </form>

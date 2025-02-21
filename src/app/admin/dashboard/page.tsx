@@ -42,7 +42,7 @@ export default function AdminDashboard() {
         setUsers(data);
       } catch (error) {
         console.error('Failed to fetch users:', error);
-        toast.error(t('unexpectedError'));
+        toast.error(t('common.errors.unexpectedError'));
       }
     };
 
@@ -56,7 +56,7 @@ export default function AdminDashboard() {
     setResetLink('');
 
     if (!selectedResetUser) {
-      toast.error(t('pleaseSelectAUser'));
+      toast.error(t('admin.passwordReset.errors.noUserSelected'));
       return;
     }
 
@@ -74,11 +74,11 @@ export default function AdminDashboard() {
         const fullResetLink = `${window.location.origin}${data.resetLink}`;
         setResetLink(fullResetLink);
       } else {
-        toast.error(t('passwordResetLinkGenerationError'));
+        toast.error(t('admin.passwordReset.errors.generateFailed'));
       }
     } catch (error) {
       console.error('Password reset link generation error:', error);
-      toast.error(t('unexpectedError'));
+      toast.error(t('common.errors.unexpectedError'));
     }
   };
 
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
     e.preventDefault();
 
     if (!selectedRoleUser || !selectedUserRole) {
-      toast.error(t('noUserOrRoleSelected'));
+      toast.error(t('admin.roleManagement.errors.noUserOrRoleSelected'));
       return;
     }
 
@@ -109,20 +109,20 @@ export default function AdminDashboard() {
             ? { ...user, role: selectedUserRole as User['role'] } 
             : user
         ));
-        toast.success(t('userRoleUpdatedSuccessfully'));
+        toast.success(t('admin.roleManagement.success'));
       } else {
-        toast.error(t('unexpectedError'));
+        toast.error(t('common.errors.unexpectedError'));
       }
     } catch (error) {
       console.error('User role update error:', error);
-      toast.error(t('unexpectedError'));
+      toast.error(t('common.errors.unexpectedError'));
     }
   };
 
   const copyResetLink = () => {
     if (resetLink) {
       navigator.clipboard.writeText(resetLink);
-      toast.success(t('resetLinkCopied'));
+      toast.success(t('admin.passwordReset.success'));
     }
   };
 
@@ -131,9 +131,9 @@ export default function AdminDashboard() {
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
         <div className="text-center">
           <div className="animate-spin inline-block w-16 h-16 border-[4px] border-current border-t-transparent text-indigo-600 rounded-full" role="status">
-            <span className="sr-only">{t('loading')}</span>
+            <span className="sr-only">{t('common.status.loading')}</span>
           </div>
-          <p className="mt-4 text-lg text-gray-600">{t('loading')}</p>
+          <p className="mt-4 text-lg text-gray-600">{t('common.status.loading')}</p>
         </div>
       </div>
     )
@@ -151,7 +151,7 @@ export default function AdminDashboard() {
             </svg>
           </div>
           <div>
-            <h1 className="text-3xl font-extrabold text-gray-900">{t('adminDashboard')}</h1>
+            <h1 className="text-3xl font-extrabold text-gray-900">{t('admin.title')}</h1>
           </div>
         </div>
 
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
           <form onSubmit={handleGenerateResetLink} className="space-y-4">
             <div>
               <label htmlFor="resetUserSelect" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('selectUserForPasswordReset')}
+                {t('admin.passwordReset.selectUser')}
               </label>
               <select 
                 id="resetUserSelect"
@@ -169,7 +169,7 @@ export default function AdminDashboard() {
                 required
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">{t('selectAUser')}</option>
+                <option value="">{t('admin.passwordReset.fields.selectUser')}</option>
                 {users.map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.username} | {user.role}
@@ -182,14 +182,14 @@ export default function AdminDashboard() {
               type="submit" 
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
             >
-              {t('generateResetLink')}
+              {t('admin.passwordReset.generateLink')}
             </button>
           </form>
 
           {/* Reset Link Display */}
           {resetLink && (
             <div className="bg-green-50 border border-green-200 rounded-md p-4 space-y-3">
-              <h2 className="text-lg font-semibold text-green-800">{t('passwordResetLink')}</h2>
+              <h2 className="text-lg font-semibold text-green-800">{t('admin.passwordReset.link')}</h2>
               <div className="flex items-center space-x-2">
                 <input 
                   type="text" 
@@ -201,11 +201,11 @@ export default function AdminDashboard() {
                   onClick={copyResetLink}
                   className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
                 >
-                  {t('copy')}
+                  {t('admin.passwordReset.copy')}
                 </button>
               </div>
               <p className="text-sm text-gray-600">
-                {t('resetLinkExpiration')}
+                {t('admin.passwordReset.expiration')}
               </p>
             </div>
           )}
@@ -216,7 +216,7 @@ export default function AdminDashboard() {
           <form onSubmit={handleChangeUserRole} className="space-y-4">
             <div>
               <label htmlFor="roleUserSelect" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('selectUserToChangeRole')}
+                {t('admin.roleManagement.selectUser')}
               </label>
               <select 
                 id="roleUserSelect"
@@ -225,7 +225,7 @@ export default function AdminDashboard() {
                 required
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">{t('selectAUser')}</option>
+                <option value="">{t('admin.roleManagement.fields.selectUser')}</option>
                 {users.map((user) => (
                   <option key={user.id} value={user.id}>
                     {user.username} | {user.role}
@@ -236,7 +236,7 @@ export default function AdminDashboard() {
 
             <div>
               <label htmlFor="roleSelect" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('selectNewRole')}
+                {t('admin.roleManagement.selectRole')}
               </label>
               <select 
                 id="roleSelect"
@@ -245,7 +245,7 @@ export default function AdminDashboard() {
                 required
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">{t('selectARole')}</option>
+                <option value="">{t('admin.roleManagement.fields.selectRole')}</option>
                 <option value="ADMIN">ADMIN</option>
                 <option value="USER">USER</option>
                 <option value="DEMO">DEMO</option>
@@ -256,7 +256,7 @@ export default function AdminDashboard() {
               type="submit" 
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
             >
-              {t('updateUserRole')}
+              {t('admin.roleManagement.updateRole')}
             </button>
           </form>
         </div>

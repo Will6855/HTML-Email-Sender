@@ -20,7 +20,7 @@ export default function ChangePasswordPage() {
     setSuccess('');
 
     if (newPassword !== confirmPassword) {
-      setError(t('passwordsDoNotMatch'));
+      setError(t('profile.changePassword.errors.mismatch'));
       return;
     }
 
@@ -37,10 +37,10 @@ export default function ChangePasswordPage() {
         throw new Error(data.error || 'Password change failed');
       }
 
-      setSuccess(t('passwordChangedSuccessfully'));
+      setSuccess(t('profile.changePassword.success'));
       setTimeout(() => router.push('/profile'), 2000);
     } catch (err) {
-      setError(t('unexpectedError'));
+      setError(t('common.errors.unexpectedError'));
     }
   };
 
@@ -49,13 +49,13 @@ export default function ChangePasswordPage() {
       <div className="w-full max-w-md">
         <div className="bg-white shadow-lg rounded-2xl p-8 space-y-6">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('changePassword')}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('profile.changePassword.title')}</h1>
           </div>
 
           <form onSubmit={handleChangePassword} className="space-y-4">
             <div>
               <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('currentPassword')}
+                {t('profile.changePassword.fields.currentPassword')}
               </label>
               <input
                 type="password"
@@ -63,14 +63,14 @@ export default function ChangePasswordPage() {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
-                placeholder={t('enterCurrentPassword')}
+                placeholder={t('profile.changePassword.fields.currentPasswordPlaceholder')}
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
               <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('newPassword')}
+                {t('profile.changePassword.fields.newPassword')}
               </label>
               <input
                 type="password"
@@ -78,14 +78,14 @@ export default function ChangePasswordPage() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                placeholder={t('enterNewPassword')}
+                placeholder={t('profile.changePassword.fields.newPasswordPlaceholder')}
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('confirmPassword')}
+                {t('profile.changePassword.fields.confirmPassword')}
               </label>
               <input
                 type="password"
@@ -93,7 +93,7 @@ export default function ChangePasswordPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                placeholder={t('confirmNewPassword')}
+                placeholder={t('profile.changePassword.fields.confirmPasswordPlaceholder')}
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -114,7 +114,7 @@ export default function ChangePasswordPage() {
               type="submit"
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
             >
-              {t('changePassword')}
+              {t('profile.changePassword.submit')}
             </button>
           </form>
 
@@ -123,7 +123,7 @@ export default function ChangePasswordPage() {
               href="/profile" 
               className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
             >
-              {t('backToProfile')}
+              {t('profile.changePassword.backToProfile')}
             </Link>
           </div>
         </div>

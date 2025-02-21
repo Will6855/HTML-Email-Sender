@@ -31,10 +31,10 @@ export default function ChangeEmailPage() {
         throw new Error(data.error || 'Email change failed');
       }
       
-      setSuccess(t('emailChangedSuccessfully'));
+      setSuccess(t('profile.changeEmail.success'));
       setTimeout(() => router.push('/profile'), 2000);
     } catch (err) {
-      setError(t('unexpectedError'));
+      setError(t('common.errors.unexpectedError'));
     }
   };
 
@@ -43,13 +43,13 @@ export default function ChangeEmailPage() {
       <div className="w-full max-w-md">
         <div className="bg-white shadow-lg rounded-2xl p-8 space-y-6">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('changeEmail')}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('profile.changeEmail.title')}</h1>
           </div>
 
           <form onSubmit={handleChangeEmail} className="space-y-4">
             <div>
               <label htmlFor="newEmail" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('newEmail')}
+                {t('profile.changeEmail.fields.newEmail')}
               </label>
               <input
                 type="email"
@@ -57,14 +57,14 @@ export default function ChangeEmailPage() {
                 value={newEmail}
                 onChange={(e) => setNewEmail(e.target.value)}
                 required
-                placeholder={t('enterNewEmail')}
+                placeholder={t('profile.changeEmail.fields.newEmailPlaceholder')}
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
               <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('currentPassword')}
+                {t('profile.changeEmail.fields.currentPassword')}
               </label>
               <input
                 type="password"
@@ -72,7 +72,7 @@ export default function ChangeEmailPage() {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
-                placeholder={t('enterCurrentPassword')}
+                placeholder={t('profile.changeEmail.fields.currentPasswordPlaceholder')}
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -93,7 +93,7 @@ export default function ChangeEmailPage() {
               type="submit"
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
             >
-              {t('changeEmail')}
+              {t('profile.changeEmail.submit')}
             </button>
           </form>
 
@@ -102,7 +102,7 @@ export default function ChangeEmailPage() {
               href="/profile" 
               className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
             >
-              {t('backToProfile')}
+              {t('profile.changeEmail.backToProfile')}
             </Link>
           </div>
         </div>

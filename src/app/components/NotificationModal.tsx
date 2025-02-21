@@ -38,7 +38,7 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
           <h3 className={`ml-3 text-lg font-medium ${
             type === 'success' ? 'text-green-900' : 'text-red-900'
           }`}>
-            {type === 'success' ? t('success') : t('error')}
+            {type === 'success' ? t('common.status.success') : t('common.status.error')}
           </h3>
         </div>
         <div className="mt-2">
@@ -54,7 +54,7 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
             } focus:outline-none focus:ring-2 focus:ring-offset-2 sm:text-sm`}
             onClick={onClose}
           >
-            {t('close')}
+            {t('common.actions.close')}
           </button>
         </div>
       </div>

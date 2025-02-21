@@ -21,7 +21,7 @@ export default function ResetPassword() {
     setIsLoading(true);
     
     if (newPassword !== confirmPassword) {
-      setError(t('passwordsDoNotMatch'));
+      setError(t('resetPassword.validation.passwordsDoNotMatch'));
       setIsLoading(false);
       return;
     }
@@ -36,21 +36,21 @@ export default function ResetPassword() {
       const data = await response.json();
 
       if (response.ok) {
-        alert(t('passwordResetSuccess'));
+        alert(t('resetPassword.status.success'));
         router.push('/login');
       } else {
-        setError(t('passwordResetError'));
+        setError(t('resetPassword.status.error'));
       }
     } catch (error) {
       console.error('Password reset error:', error);
-      setError(t('unexpectedError'));
+      setError(t('common.status.error'));
     } finally {
       setIsLoading(false);
     }
   };
 
   if (!resetToken) {
-    return <div className="container mx-auto p-4">{t('invalidResetLink')}</div>;
+    return <div className="container mx-auto p-4">{t('resetPassword.errors.invalidToken')}</div>;
   }
 
   return (
@@ -58,13 +58,13 @@ export default function ResetPassword() {
       <div className="w-full max-w-md">
         <div className="bg-white shadow-lg rounded-2xl p-8 space-y-6">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('resetPassword')}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('resetPassword.title')}</h1>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('newPassword')}
+                {t('resetPassword.fields.password')}
               </label>
               <input 
                 type="password"
@@ -77,7 +77,7 @@ export default function ResetPassword() {
             </div>
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                {t('confirmPassword')}
+                {t('resetPassword.fields.confirmPassword')}
               </label>
               <input 
                 type="password"
@@ -100,7 +100,7 @@ export default function ResetPassword() {
               disabled={isLoading}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
             >
-              {isLoading ? t('resettingPassword') : t('resetPassword')}
+              {isLoading ? t('resetPassword.status.resetting') : t('resetPassword.fields.submit')}
             </button>
           </form>
         </div>
