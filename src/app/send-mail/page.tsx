@@ -145,6 +145,12 @@ const Home = () => {
   };
 
   const handleSendEmails = async () => {
+    if (session?.user?.role === 'DEMO') {
+      setNotification({ type: 'error', message: t('demoRoleCannotSendEmails') });
+      setShowNotificationModal(true);
+      return;
+    }
+
     if (!form.selectedAccount) {
       setNotification({ type: 'error', message: t('selectAccountError') });
       setShowNotificationModal(true);

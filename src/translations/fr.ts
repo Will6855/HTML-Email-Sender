@@ -96,6 +96,7 @@ export const fr = {
   errorSavingTemplate: 'Erreur lors de la sauvegarde du modèle :',
   personalizationTip: 'Astuce : Utilisez {{nomColonne}} pour insérer des données personnalisées de votre fichier CSV.',
   emailSendSummary: '{0} emails envoyés avec succès, {1} échoués.',
+  demoRoleCannotSendEmails: 'Un compte demo ne peut pas envoyer des emails',
 
   // Notifications
   success: 'Succès',
@@ -144,6 +145,7 @@ export const fr = {
   usernameRequired: 'Le nom d\'utilisateur est requis',
   passwordRequired: 'Le mot de passe est requis',
   invalidUsernameOrPassword: 'Nom d\'utilisateur ou mot de passe invalide',
+  forgotPasswordHelp: 'Veuillez contacter l\'administrateur pour réinitialiser votre mot de passe.',
 
   registerTitle: 'Inscription',
   firstName: 'Prénom',
@@ -203,7 +205,11 @@ export const fr = {
   pleaseSelectAUser: 'Veuillez sélectionner un utilisateur',
   failedToGenerateResetLink: 'Échec de la génération du lien de réinitialisation',
   unexpectedError: 'Une erreur inattendue s\'est produite',
-  generatePasswordResetLinksForUsers: 'Générer des liens de réinitialisation de mot de passe pour les utilisateurs',
+  selectUserToChangeRole: 'Veuillez sélectionner un utilisateur pour changer son rôle',
+  selectNewRole: 'Veuillez sélectionner un nouveau rôle',
+  selectARole: 'Veuillez sélectionner un rôle',
+  updateUserRole: 'Mettre à jour le rôle de l\'utilisateur',
+  userRoleUpdatedSuccessfully: 'Rôle de l\'utilisateur mis à jour avec succès',
 
   // Filter Translations
   advancedFilters: 'Filtres Avancés',

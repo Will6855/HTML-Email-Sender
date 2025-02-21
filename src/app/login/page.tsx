@@ -12,6 +12,7 @@ import { LanguageProvider } from '@/context/LanguageContext';
 export default function Login() {
   const { t } = useTranslation();
   const [error, setError] = useState<string | null>(null);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
   const router = useRouter();
 
   const loginSchema = z.object({
@@ -90,15 +91,24 @@ export default function Login() {
             )}
           </div>
 
-          <button 
-            type="submit" 
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
-          >
-            {t('signIn')}
-          </button>
+          <div className="flex justify-between items-center">
+            <button 
+              type="submit" 
+              className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+            >
+              {t('signIn')}
+            </button>
+          </div>
         </form>
 
-        <div className="text-center mt-4">
+        <div className="text-center mt-4 space-y-2">
+          <button 
+            onClick={() => setShowForgotPasswordModal(true)}
+            className="text-sm text-blue-500 hover:underline"
+          >
+            {t('forgotPassword')}
+          </button>
+
           <p className="text-sm text-gray-600">
             {t('noAccount')}
             <a href="/register" className="text-blue-500 ml-1 hover:underline">
@@ -107,6 +117,31 @@ export default function Login() {
           </p>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotPasswordModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center h-full w-full z-50">
+          <div className="p-5 border w-96 shadow-lg rounded-md bg-white relative">
+            <button
+              onClick={() => setShowForgotPasswordModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-500"
+            >
+              ✕
+            </button>
+            <div className="flex flex-col space-y-4">
+              <div className="w-full text-center">
+                <h3 className="text-lg font-medium">{t('forgotPassword')}</h3>
+              </div>
+
+              <div className="text-center">
+                <p className="text-gray-600 mb-4">
+                  {t('forgotPasswordHelp')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
     </LanguageProvider>
   );

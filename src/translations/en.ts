@@ -96,6 +96,7 @@ export const en = {
   errorSavingTemplate: 'Error saving template:',
   personalizationTip: 'Tip: Use {{columnName}} to insert personalized data from your CSV file.',
   emailSendSummary: '{0} emails sent successfully, {1} failed.',
+  demoRoleCannotSendEmails: 'Demo account cannot send emails',
 
   // Notifications
   success: 'Success',
@@ -143,6 +144,7 @@ export const en = {
   usernameRequired: 'Username is required',
   passwordRequired: 'Password is required',
   invalidUsernameOrPassword: 'Invalid username or password',
+  forgotPasswordHelp: 'Please contact the administrator to reset your password.',
 
   registerTitle: 'Sign Up',
   firstName: 'First Name',
@@ -203,7 +205,11 @@ export const en = {
   pleaseSelectAUser: 'Please select a user',
   failedToGenerateResetLink: 'Failed to generate reset link',
   unexpectedError: 'An unexpected error occurred',
-  generatePasswordResetLinksForUsers: 'Generate password reset links for users',
+  selectUserToChangeRole: 'Please select a user to change their role',
+  selectNewRole: 'Please select a new role',
+  selectARole: 'Please select a role',
+  updateUserRole: 'Update user role',
+  userRoleUpdatedSuccessfully: 'User role updated successfully',
 
   // Filter Translations
   advancedFilters: 'Advanced Filters',

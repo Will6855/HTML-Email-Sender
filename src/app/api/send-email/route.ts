@@ -8,7 +8,7 @@ import { decryptPassword } from '@/app/api/emailAccounts/route';
 export async function POST(request: Request) {
   // Check if user is authenticated
   const session = await getServerSession(authOptions);
-  if (!session) {
+  if (!session || session?.user?.role === 'DEMO') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

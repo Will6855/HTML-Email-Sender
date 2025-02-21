@@ -10,6 +10,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 interface User {
     id: string;
     username: string;
+    role: 'ADMIN' | 'USER' | 'DEMO';
 }
 
 export default function AdminDashboard() {
@@ -21,9 +22,10 @@ export default function AdminDashboard() {
   });
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedResetUser, setSelectedResetUser] = useState('');
+  const [selectedRoleUser, setSelectedRoleUser] = useState('');
+  const [selectedUserRole, setSelectedUserRole] = useState('');
   const [resetLink, setResetLink] = useState('');
-  const [error, setError] = useState('');
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -40,7 +42,7 @@ export default function AdminDashboard() {
         setUsers(data);
       } catch (error) {
         console.error('Failed to fetch users:', error);
-        setError(t('unexpectedError'));
+        toast.error(t('unexpectedError'));
       }
     };
 
@@ -51,11 +53,10 @@ export default function AdminDashboard() {
 
   const handleGenerateResetLink = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setResetLink('');
 
-    if (!selectedUser) {
-      setError(t('noUserSelected'));
+    if (!selectedResetUser) {
+      toast.error(t('pleaseSelectAUser'));
       return;
     }
 
@@ -63,7 +64,7 @@ export default function AdminDashboard() {
       const response = await fetch('/api/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: selectedUser })
+        body: JSON.stringify({ userId: selectedResetUser })
       });
 
       const data = await response.json();
@@ -73,11 +74,48 @@ export default function AdminDashboard() {
         const fullResetLink = `${window.location.origin}${data.resetLink}`;
         setResetLink(fullResetLink);
       } else {
-        setError(t('passwordResetLinkGenerationError'));
+        toast.error(t('passwordResetLinkGenerationError'));
       }
     } catch (error) {
       console.error('Password reset link generation error:', error);
-      setError(t('unexpectedError'));
+      toast.error(t('unexpectedError'));
+    }
+  };
+
+  const handleChangeUserRole = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!selectedRoleUser || !selectedUserRole) {
+      toast.error(t('noUserOrRoleSelected'));
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/users/role', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          userId: selectedRoleUser, 
+          role: selectedUserRole 
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Update local users state to reflect role change
+        setUsers(users.map(user => 
+          user.id === selectedRoleUser 
+            ? { ...user, role: selectedUserRole as User['role'] } 
+            : user
+        ));
+        toast.success(t('userRoleUpdatedSuccessfully'));
+      } else {
+        toast.error(t('unexpectedError'));
+      }
+    } catch (error) {
+      console.error('User role update error:', error);
+      toast.error(t('unexpectedError'));
     }
   };
 
@@ -114,28 +152,27 @@ export default function AdminDashboard() {
           </div>
           <div>
             <h1 className="text-3xl font-extrabold text-gray-900">{t('adminDashboard')}</h1>
-            <p className="text-gray-600">{t('generatePasswordResetLinksForUsers')}</p>
           </div>
         </div>
 
-        {/* User Reset Link Generation */}
+        {/* Password Reset Link Generation */}
         <div className="bg-white shadow-lg rounded-2xl p-8 space-y-6">
           <form onSubmit={handleGenerateResetLink} className="space-y-4">
             <div>
-              <label htmlFor="userSelect" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="resetUserSelect" className="block text-sm font-medium text-gray-700 mb-2">
                 {t('selectUserForPasswordReset')}
               </label>
               <select 
-                id="userSelect"
-                value={selectedUser} 
-                onChange={(e) => setSelectedUser(e.target.value)}
+                id="resetUserSelect"
+                value={selectedResetUser} 
+                onChange={(e) => setSelectedResetUser(e.target.value)}
                 required
                 className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">{t('selectAUser')}</option>
                 {users.map((user) => (
                   <option key={user.id} value={user.id}>
-                    {user.username}
+                    {user.username} | {user.role}
                   </option>
                 ))}
               </select>
@@ -148,13 +185,6 @@ export default function AdminDashboard() {
               {t('generateResetLink')}
             </button>
           </form>
-
-          {/* Error Display */}
-          {error && (
-            <div className="text-red-600 text-sm text-center">
-              {error}
-            </div>
-          )}
 
           {/* Reset Link Display */}
           {resetLink && (
@@ -179,6 +209,56 @@ export default function AdminDashboard() {
               </p>
             </div>
           )}
+        </div>
+
+        {/* User Role Management */}
+        <div className="bg-white shadow-lg rounded-2xl p-8 space-y-6">
+          <form onSubmit={handleChangeUserRole} className="space-y-4">
+            <div>
+              <label htmlFor="roleUserSelect" className="block text-sm font-medium text-gray-700 mb-2">
+                {t('selectUserToChangeRole')}
+              </label>
+              <select 
+                id="roleUserSelect"
+                value={selectedRoleUser} 
+                onChange={(e) => setSelectedRoleUser(e.target.value)}
+                required
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">{t('selectAUser')}</option>
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.username} | {user.role}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label htmlFor="roleSelect" className="block text-sm font-medium text-gray-700 mb-2">
+                {t('selectNewRole')}
+              </label>
+              <select 
+                id="roleSelect"
+                value={selectedUserRole} 
+                onChange={(e) => setSelectedUserRole(e.target.value)}
+                required
+                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">{t('selectARole')}</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="USER">USER</option>
+                <option value="DEMO">DEMO</option>
+              </select>
+            </div>
+            
+            <button 
+              type="submit" 
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              {t('updateUserRole')}
+            </button>
+          </form>
         </div>
       </div>
     </div>
