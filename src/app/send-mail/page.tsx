@@ -198,10 +198,13 @@ const Home = () => {
       }
       formData.append('accountId', form.selectedAccount.id); 
       formData.append('to', recipientEmail);
-      formData.append('subject', form.subject);
       
+      let senderName = form.senderName;
+      let subject = form.subject;
       let htmlContent = form.htmlContent;
       Object.keys(recipient).forEach((key) => {
+        senderName = senderName.replace(new RegExp(`{{${key}}}`, 'g'), recipient[key]);
+        subject = subject.replace(new RegExp(`{{${key}}}`, 'g'), recipient[key]);
         htmlContent = htmlContent.replace(new RegExp(`{{${key}}}`, 'g'), recipient[key]);
       });
       
@@ -211,8 +214,9 @@ const Home = () => {
         htmlContent = htmlContent.replace(base64Image, placeholder);
       });
       
+      formData.append('senderName', senderName);
+      formData.append('subject', subject);
       formData.append('htmlContent', htmlContent);
-      formData.append('senderName', form.senderName);
 
       // Append attachments
       form.attachments.forEach(file => {
