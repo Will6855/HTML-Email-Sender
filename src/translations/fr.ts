@@ -23,6 +23,7 @@ export const fr = {
   fillAllFields: 'Veuillez remplir tous les champs',
   noAccounts: 'Aucun compte ajouté',
   selectAccountError: 'Veuillez choisir un compte',
+  errorAddingAccount: 'Échec de l\'ajout du compte. Veuillez réessayer.',
   edit: 'Modifier',
   errorEditingAccount: 'Échec de la modification du compte. Veuillez réessayer.',
   confirmRemoveAccount: 'Êtes-vous sûr(e) de vouloir supprimer le compte avec l\'email :',
@@ -97,6 +98,7 @@ export const fr = {
   personalizationTip: 'Astuce : Utilisez {{nomColonne}} pour insérer des données personnalisées de votre fichier CSV.',
   emailSendSummary: '{0} emails envoyés avec succès, {1} échoués.',
   demoRoleCannotSendEmails: 'Un compte demo ne peut pas envoyer des emails',
+  noCsvDataError: 'Aucune donnée CSV chargée',
 
   // Notifications
   success: 'Succès',

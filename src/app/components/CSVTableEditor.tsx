@@ -273,7 +273,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
           <button 
             onClick={openFilterModal}
             className="text-gray-600 hover:text-gray-900"
-            title={t('advancedFilter')}
+            title={t('advancedFilters')}
           >
             <FiFilter className="h-6 w-6" />
           </button>

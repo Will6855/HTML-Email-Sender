@@ -3,57 +3,51 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { translations } from '@/translations';
 
+// Add this type definition using the keys from your translations
+type TranslationKey = keyof typeof translations.en;
+
 type Language = 'en' | 'fr';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string, params?: string[]) => string;
+  t: (key: TranslationKey, params?: string[]) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const LANGUAGE_KEY = 'preferred_language';
 
-const getBrowserLanguage = (): Language => {
-  if (typeof window === 'undefined') return 'en';
-  
-  // Get browser language
-  const browserLang = navigator.language.toLowerCase();
-  
-  // Check if it starts with any of our supported languages
-  if (browserLang.startsWith('fr')) return 'fr';
-  
-  // Default to English
-  return 'en';
-};
-
-const getSavedLanguage = (): Language => {
-  if (typeof window === 'undefined') return 'en';
-  
-  const saved = localStorage.getItem(LANGUAGE_KEY);
-  if (saved === 'en' || saved === 'fr') return saved;
-  
-  // If no saved preference, use browser language
-  return getBrowserLanguage();
-};
-
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('en'); // Default to 'en' initially
+  const [language, setLanguage] = useState<Language>('en');
+  const [isClientSide, setIsClientSide] = useState(false);
 
   useEffect(() => {
-    // Set the initial language from localStorage or browser preference
-    const initialLang = getSavedLanguage();
-    setLanguage(initialLang);
+    // Mark as client-side and set initial language
+    setIsClientSide(true);
+
+    // Attempt to get saved language
+    const savedLanguage = localStorage.getItem(LANGUAGE_KEY);
+    
+    if (savedLanguage === 'en' || savedLanguage === 'fr') {
+      setLanguage(savedLanguage);
+    } else if (typeof window !== 'undefined') {
+      // Detect browser language if no saved preference
+      const browserLang = navigator.language.toLowerCase();
+      const detectedLang: Language = browserLang.startsWith('fr') ? 'fr' : 'en';
+      setLanguage(detectedLang);
+      localStorage.setItem(LANGUAGE_KEY, detectedLang);
+    }
   }, []);
 
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
-    // Save to localStorage
-    localStorage.setItem(LANGUAGE_KEY, lang);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(LANGUAGE_KEY, lang);
+    }
   };
 
-  const t = (key: string, params?: string[]): string => {
+  const t = (key: TranslationKey, params?: string[]): string => {
     let translation = translations[language][key] || key;
     
     // Replace placeholders if params are provided
@@ -65,6 +59,11 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     
     return translation;
   };
+
+  // Only render children when client-side to prevent hydration issues
+  if (!isClientSide) {
+    return null;
+  }
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>

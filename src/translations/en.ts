@@ -23,6 +23,7 @@ export const en = {
   fillAllFields: 'Please fill in all fields',
   noAccounts: 'No accounts added yet',
   selectAccountError: 'Please select an account',
+  errorAddingAccount: 'Failed to add account. Please try again.',
   edit: 'Edit',
   errorEditingAccount: 'Failed to edit account. Please try again.',
   confirmRemoveAccount: 'Are you sure you want to remove the account with the email: ',
@@ -97,6 +98,7 @@ export const en = {
   personalizationTip: 'Tip: Use {{columnName}} to insert personalized data from your CSV file.',
   emailSendSummary: '{0} emails sent successfully, {1} failed.',
   demoRoleCannotSendEmails: 'Demo account cannot send emails',
+  noCsvDataError: 'No CSV data loaded',
 
   // Notifications
   success: 'Success',
