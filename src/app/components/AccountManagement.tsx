@@ -61,6 +61,7 @@ const AccountManagement = ({
     };
 
     loadAccounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddAccount = async (newAccount: Account) => {

@@ -1,3 +1,5 @@
+import { error } from "console";
+
 const general = {
   title: 'Email Campaign Manager',
   description: 'Send personalized HTML emails to your contact list',
@@ -93,6 +95,9 @@ const templates = {
   title: 'Manage Templates',
   templateNamePlaceholder: 'Template name',
   noTemplatesSaved: 'No templates available',
+  errors: {
+    errorSavingTemplate: 'Failed to save template. Please try again.'
+  }
 } as const;
 
 const filedropzone = {

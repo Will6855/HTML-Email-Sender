@@ -382,9 +382,12 @@ const GrapesJSEditor = forwardRef<GrapesJSEditorRef, GrapesJSEditorProps>(({ ini
         }
       }
     };
-  }, [language]); // Add language to dependency array
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
 
   return <div id="gjs" />;
 });
+
+GrapesJSEditor.displayName = 'GrapesJSEditor';
 
 export default GrapesJSEditor;

@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import { prisma } from '@/lib/prisma';
-import { decryptPassword } from '@/app/api/emailAccounts/route';
+import { decryptPassword } from '@/lib/encryption';
 
 export async function POST(request: Request) {
   // Check if user is authenticated

@@ -93,6 +93,9 @@ const templates = {
   title: 'Gérer les modèles',
   templateNamePlaceholder: 'Nom du modèle',
   noTemplatesSaved: 'Aucun modèle disponible',
+  errors: {
+    errorSavingTemplate: 'Échec de l\'enregistrement du modèle. Veuillez réessayer.'
+  }
 } as const;
 
 const filedropzone = {

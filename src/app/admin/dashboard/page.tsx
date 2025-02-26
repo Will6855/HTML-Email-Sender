@@ -49,7 +49,7 @@ export default function AdminDashboard() {
     if (session?.user?.role === 'ADMIN') {
       fetchUsers();
     }
-  }, [session, status, router]);
+  }, [session, status, router, t]);
 
   const handleGenerateResetLink = async (e: React.FormEvent) => {
     e.preventDefault();
