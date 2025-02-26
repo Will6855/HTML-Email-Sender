@@ -203,9 +203,9 @@ const Home = () => {
       let subject = form.subject;
       let htmlContent = form.htmlContent;
       Object.keys(recipient).forEach((key) => {
-        senderName = senderName.replace(new RegExp(`{{${key}}}`, 'g'), recipient[key]);
-        subject = subject.replace(new RegExp(`{{${key}}}`, 'g'), recipient[key]);
-        htmlContent = htmlContent.replace(new RegExp(`{{${key}}}`, 'g'), recipient[key]);
+        senderName = senderName.replace(new RegExp(`{{${key}}}`, 'gi'), recipient[key]);
+        subject = subject.replace(new RegExp(`{{${key}}}`, 'gi'), recipient[key]);
+        htmlContent = htmlContent.replace(new RegExp(`{{${key}}}`, 'gi'), recipient[key]);
       });
       
       // Replace base64 image sources with placeholders

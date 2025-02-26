@@ -78,7 +78,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
         const newRows = prevRows.map(row => {
           const newRow = { ...row };
           if (oldHeader in newRow) {
-            newRow[newHeader] = newRow[oldHeader];
+            newRow[newHeader.toLowerCase()] = newRow[oldHeader];
             delete newRow[oldHeader];
           }
           return newRow;
@@ -104,7 +104,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
   }, [headers, onDataChange]);
 
   const handleAddColumn = useCallback(() => {
-    const newHeader = `Column ${headers.length + 1}`;
+    const newHeader = `column_${headers.length + 1}`;
     setRows(prevRows => {
       const newRows = prevRows.map(row => ({ ...row, [newHeader]: '' }));
       queueMicrotask(() => onDataChange(newRows));
@@ -140,7 +140,7 @@ const CSVTableEditor: React.FC<CSVTableEditorProps> = ({
     reader.onload = (event) => {
       const text = event.target?.result as string;
       const lines = text.split('\n');
-      const headers = lines[0].split(',').map(header => header.trim());
+      const headers = lines[0].split(',').map(header => header.trim().toLowerCase());
       
       const newRows: Record<string, string>[] = [];
       for (let i = 1; i < lines.length; i++) {

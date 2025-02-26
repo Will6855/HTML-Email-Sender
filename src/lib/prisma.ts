@@ -4,10 +4,6 @@ declare global {
   var prisma: PrismaClient | undefined
 }
 
-const schemaPath = process.env.NODE_ENV === 'production' 
-  ? './prisma/schema.prod.prisma'
-  : './prisma/schema.dev.prisma'
-
 export const prisma = global.prisma || new PrismaClient({
   datasources: {
     db: {

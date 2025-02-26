@@ -4,15 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start", 
+    "dev": "npm run dev:generate && next dev",
+    "build": "npm run prod:generate && next build",
+    "start": "npm run prod:generate && next start",
     "lint": "next lint",
     "dev:db:push": "prisma db push --schema=./prisma/schema.dev.prisma",
     "prod:migrate": "prisma migrate deploy --schema=./prisma/schema.prod.prisma",
     "dev:generate": "prisma generate --schema=./prisma/schema.dev.prisma",
     "prod:generate": "prisma generate --schema=./prisma/schema.prod.prisma",
-    "create:admin": "node --loader ts-node/esm scripts/create-admin.ts"
+    "create:admin": "node --loader ts-node/esm scripts/create-admin.ts",
+    "studio:dev": "prisma studio --schema=./prisma/schema.dev.prisma",
+    "studio:prod": "prisma studio --schema=./prisma/schema.prod.prisma"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
