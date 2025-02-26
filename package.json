@@ -8,8 +8,8 @@
     "build": "next build",
     "start": "next start", 
     "lint": "next lint",
-    "dev:migrate": "echo provider = \"sqlite\" > prisma/migrations/migration_lock.toml && prisma migrate dev --schema=./prisma/schema.dev.prisma",
-    "prod:migrate": "echo provider = \"postgresql\" > prisma/migrations/migration_lock.toml && prisma migrate deploy --schema=./prisma/schema.prod.prisma",
+    "dev:db:push": "prisma db push --schema=./prisma/schema.dev.prisma",
+    "prod:migrate": "prisma migrate deploy --schema=./prisma/schema.prod.prisma",
     "dev:generate": "prisma generate --schema=./prisma/schema.dev.prisma",
     "prod:generate": "prisma generate --schema=./prisma/schema.prod.prisma",
     "create:admin": "node --loader ts-node/esm scripts/create-admin.ts"
