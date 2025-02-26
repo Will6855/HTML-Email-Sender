@@ -1,0 +1,66 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model GeneralAccount {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  role      UserRole @default(DEMO)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
+  emailAccounts  EmailAccount[]
+  emailTemplates EmailTemplate[]
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  DEMO
+}
+
+model EmailAccount {
+  id         String  @id @default(cuid())
+  name       String
+  email      String  @unique
+  password   String
+  smtpServer String
+  smtpPort   Int     @default(587)
+  isDefault  Boolean @default(false)
+
+  generalAccountId String
+  generalAccount   GeneralAccount @relation(fields: [generalAccountId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  emailTemplates EmailTemplate[]
+}
+
+model EmailTemplate {
+  id               String         @id @default(cuid())
+  name             String
+  content          String?
+  subject          String?
+  senderName       String?
+  generalAccountId String
+  generalAccount   GeneralAccount @relation(fields: [generalAccountId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  EmailAccount   EmailAccount? @relation(fields: [emailAccountId], references: [id])
+  emailAccountId String?
+
+  @@unique([name, generalAccountId])
+}

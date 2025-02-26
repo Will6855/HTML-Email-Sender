@@ -8,9 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:reset": "prisma migrate reset",
+    "dev:migrate": "prisma migrate dev --schema=./prisma/schema.dev.prisma",
+    "prod:migrate": "prisma migrate deploy --schema=./prisma/schema.prod.prisma",
+    "dev:generate": "prisma generate --schema=./prisma/schema.dev.prisma",
+    "prod:generate": "prisma generate --schema=./prisma/schema.prod.prisma",
     "create:admin": "node --loader ts-node/esm scripts/create-admin.ts"
   },
   "dependencies": {
